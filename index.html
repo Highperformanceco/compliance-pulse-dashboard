@@ -1,0 +1,655 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Compliance Pulse - Runaki & Leaflet Dashboard</title>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: #f0f2f5;
+            color: #1a1a2e;
+            padding: 20px;
+        }
+
+        .header {
+            background: linear-gradient(135deg, #1a1a2e, #16213e);
+            color: white;
+            padding: 25px 30px;
+            border-radius: 15px;
+            margin-bottom: 25px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.2);
+        }
+        
+        .header-left h1 {
+            font-size: 32px;
+            font-weight: 700;
+            letter-spacing: 1px;
+        }
+        
+        .header-left h1 span {
+            color: #f1c40f;
+        }
+        
+        .header-left .subtitle {
+            font-size: 14px;
+            opacity: 0.8;
+            margin-top: 5px;
+        }
+        
+        .header-right {
+            text-align: right;
+        }
+        
+        .header-right .timestamp {
+            font-size: 14px;
+            opacity: 0.9;
+            background: rgba(255,255,255,0.1);
+            padding: 8px 16px;
+            border-radius: 20px;
+            display: inline-block;
+        }
+        
+        .summary-stats {
+            display: flex;
+            gap: 30px;
+            margin-top: 15px;
+            flex-wrap: wrap;
+        }
+        
+        .stat-item {
+            background: rgba(255,255,255,0.1);
+            padding: 10px 20px;
+            border-radius: 10px;
+            text-align: center;
+            min-width: 100px;
+        }
+        
+        .stat-item .number {
+            font-size: 28px;
+            font-weight: 700;
+            display: block;
+        }
+        
+        .stat-item .label {
+            font-size: 12px;
+            opacity: 0.8;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+        
+        .stat-item.green .number { color: #2ecc71; }
+        .stat-item.yellow .number { color: #f1c40f; }
+        .stat-item.red .number { color: #e74c3c; }
+        .stat-item.blue .number { color: #3498db; }
+
+        .dashboard-grid {
+            display: grid;
+            grid-template-columns: repeat(12, 1fr);
+            gap: 20px;
+        }
+        
+        .card {
+            background: white;
+            border-radius: 15px;
+            padding: 20px;
+            box-shadow: 0 2px 15px rgba(0,0,0,0.06);
+            grid-column: span 12;
+        }
+        
+        .card-title {
+            font-size: 16px;
+            font-weight: 600;
+            color: #2c3e50;
+            margin-bottom: 15px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .card-title .badge {
+            background: #ecf0f1;
+            padding: 4px 12px;
+            border-radius: 20px;
+            font-size: 12px;
+            font-weight: 400;
+        }
+
+        .compliance-table {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 14px;
+        }
+        
+        .compliance-table th {
+            text-align: left;
+            padding: 12px 10px;
+            background: #f8f9fa;
+            color: #2c3e50;
+            font-weight: 600;
+            border-bottom: 2px solid #e9ecef;
+        }
+        
+        .compliance-table td {
+            padding: 10px;
+            border-bottom: 1px solid #f1f3f5;
+        }
+        
+        .compliance-table tr:hover {
+            background: #f8f9fa;
+        }
+        
+        .status-badge {
+            display: inline-block;
+            padding: 4px 12px;
+            border-radius: 20px;
+            font-size: 12px;
+            font-weight: 600;
+        }
+        
+        .status-submitted {
+            background: #d4edda;
+            color: #155724;
+        }
+        
+        .status-pending {
+            background: #fff3cd;
+            color: #856404;
+        }
+        
+        .status-missed {
+            background: #f8d7da;
+            color: #721c24;
+        }
+        
+        .status-flagged {
+            background: #fce4ec;
+            color: #c62828;
+        }
+        
+        .status-resolved {
+            background: #e8f5e9;
+            color: #2e7d32;
+        }
+
+        .chart-container {
+            position: relative;
+            height: 250px;
+        }
+        
+        .chart-row {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+        }
+
+        .alert-feed {
+            max-height: 250px;
+            overflow-y: auto;
+        }
+        
+        .alert-item {
+            padding: 12px 15px;
+            border-left: 4px solid;
+            margin-bottom: 8px;
+            background: #f8f9fa;
+            border-radius: 8px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .alert-item.critical { border-color: #e74c3c; }
+        .alert-item.warning { border-color: #f1c40f; }
+        .alert-item.info { border-color: #3498db; }
+        .alert-item.success { border-color: #2ecc71; }
+        
+        .alert-item .time {
+            font-size: 12px;
+            color: #7f8c8d;
+        }
+
+        .heatmap-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+            gap: 10px;
+        }
+        
+        .heatmap-item {
+            padding: 15px;
+            border-radius: 10px;
+            text-align: center;
+            color: white;
+            font-weight: 600;
+        }
+        
+        .heatmap-item .dept {
+            font-size: 14px;
+            opacity: 0.9;
+        }
+        
+        .heatmap-item .score {
+            font-size: 24px;
+            margin-top: 5px;
+        }
+        
+        .risk-high { background: #e74c3c; }
+        .risk-medium { background: #f39c12; }
+        .risk-low { background: #2ecc71; }
+
+        @media (min-width: 768px) {
+            .card.col-span-6 { grid-column: span 6; }
+            .card.col-span-4 { grid-column: span 4; }
+            .card.col-span-8 { grid-column: span 8; }
+        }
+        
+        @media (max-width: 767px) {
+            .header {
+                flex-direction: column;
+                align-items: flex-start;
+                gap: 15px;
+            }
+            
+            .header-right {
+                text-align: left;
+                width: 100%;
+            }
+            
+            .summary-stats {
+                gap: 15px;
+            }
+            
+            .stat-item {
+                min-width: 70px;
+                padding: 8px 15px;
+            }
+            
+            .stat-item .number {
+                font-size: 20px;
+            }
+            
+            .chart-row {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        .refresh-btn {
+            background: #1a1a2e;
+            color: white;
+            border: none;
+            padding: 8px 20px;
+            border-radius: 20px;
+            cursor: pointer;
+            font-size: 13px;
+            transition: all 0.3s;
+        }
+        
+        .refresh-btn:hover {
+            background: #2c3e50;
+            transform: scale(1.05);
+        }
+
+        .config-panel {
+            background: #f8f9fa;
+            border-radius: 10px;
+            padding: 15px;
+            margin-top: 10px;
+            border: 1px dashed #dee2e6;
+        }
+        
+        .config-panel h4 {
+            font-size: 13px;
+            color: #6c757d;
+            margin-bottom: 8px;
+        }
+        
+        .config-panel .hint {
+            font-size: 12px;
+            color: #6c757d;
+            font-family: monospace;
+        }
+    </style>
+</head>
+<body>
+
+    <header class="header">
+        <div class="header-left">
+            <h1>⚡ Compliance <span>Pulse</span></h1>
+            <div class="subtitle">Runaki Electricity · Leaflet KYC · Unified Command Center</div>
+            
+            <div class="summary-stats">
+                <div class="stat-item blue">
+                    <span class="number" id="total-projects">2</span>
+                    <span class="label">Active Projects</span>
+                </div>
+                <div class="stat-item green">
+                    <span class="number" id="compliance-rate">94%</span>
+                    <span class="label">Compliance Rate</span>
+                </div>
+                <div class="stat-item yellow">
+                    <span class="number" id="pending-reports">3</span>
+                    <span class="label">Pending Reports</span>
+                </div>
+                <div class="stat-item red">
+                    <span class="number" id="missed-reports">1</span>
+                    <span class="label">Missed Reports</span>
+                </div>
+            </div>
+        </div>
+        
+        <div class="header-right">
+            <div class="timestamp">
+                🕒 <span id="current-time">Loading...</span>
+            </div>
+            <div class="last-update">
+                Last updated: <span id="last-update">Just now</span>
+                <button class="refresh-btn" onclick="refreshDashboard()">⟳ Refresh</button>
+            </div>
+        </div>
+    </header>
+
+    <div class="dashboard-grid">
+        
+        <div class="card col-span-8">
+            <div class="card-title">
+                📋 Compliance Status
+                <span class="badge">Real-time</span>
+            </div>
+            <div style="overflow-x: auto;">
+                <table class="compliance-table">
+                    <thead>
+                        <tr>
+                            <th>Project</th>
+                            <th>Department/Team</th>
+                            <th>Report</th>
+                            <th>Due Date</th>
+                            <th>Status</th>
+                        </tr>
+                    </thead>
+                    <tbody id="compliance-body">
+                    </tbody>
+                </table>
+            </div>
+            
+            <div class="config-panel">
+                <h4>🔧 Quick Configuration Options</h4>
+                <span class="hint">Add/remove columns · Change status colors · Filter by project · Sort by date</span>
+            </div>
+        </div>
+        
+        <div class="card col-span-4">
+            <div class="card-title">
+                📊 Project Overview
+                <span class="badge">Visual</span>
+            </div>
+            <div class="chart-container">
+                <canvas id="statusChart"></canvas>
+            </div>
+        </div>
+        
+        <div class="card col-span-6">
+            <div class="card-title">
+                🎯 Report Issues / Ball Drops
+                <span class="badge">Timeline</span>
+            </div>
+            <div id="ball-drop-timeline">
+            </div>
+        </div>
+        
+        <div class="card col-span-6">
+            <div class="card-title">
+                🛡️ Fraud Oversight & Alerts
+                <span class="badge">Monitoring</span>
+            </div>
+            <div class="chart-row">
+                <div>
+                    <canvas id="fraudChart"></canvas>
+                </div>
+                <div>
+                    <div class="alert-feed" id="alert-feed">
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <div class="card col-span-12">
+            <div class="card-title">
+                🏆 Leadership Summary
+                <span class="badge">Executive View</span>
+            </div>
+            <div class="chart-row">
+                <div>
+                    <h4 style="font-size:14px;color:#2c3e50;margin-bottom:10px;">Department Compliance Scorecards</h4>
+                    <canvas id="scorecardChart"></canvas>
+                </div>
+                <div>
+                    <h4 style="font-size:14px;color:#2c3e50;margin-bottom:10px;">Risk Heatmap</h4>
+                    <div class="heatmap-grid" id="heatmap-container">
+                    </div>
+                </div>
+            </div>
+            
+            <div class="config-panel">
+                <h4>🔧 Leadership Visibility Controls</h4>
+                <span class="hint">Toggle metrics · Adjust risk thresholds · Add custom KPIs · Export to PDF</span>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const dashboardData = {
+            timestamp: new Date().toISOString(),
+            compliance: [
+                { project: 'Runaki', team: 'Contact Center', report: 'Daily Call Log', due: '2026-07-15', status: 'Submitted' },
+                { project: 'Runaki', team: 'Billing', report: 'Monthly Revenue', due: '2026-07-12', status: 'Submitted' },
+                { project: 'Runaki', team: 'Field Ops', report: 'Meter Readings', due: '2026-07-10', status: 'Pending' },
+                { project: 'Leaflet', team: 'KYC Team', report: 'Customer Verification', due: '2026-07-14', status: 'Submitted' },
+                { project: 'Leaflet', team: 'Compliance', report: 'AML Check', due: '2026-07-08', status: 'Missed' },
+                { project: 'Leaflet', team: 'Data Quality', report: 'Doc Validation', due: '2026-07-16', status: 'Pending' },
+                { project: 'Runaki', team: 'Compliance', report: 'Regulatory Filing', due: '2026-07-18', status: 'Pending' },
+                { project: 'Runaki', team: 'HR', report: 'Staff Training', due: '2026-07-05', status: 'Submitted' },
+            ],
+            ballDrops: [
+                { date: '2026-07-08', project: 'Leaflet', team: 'Compliance', reason: 'System outage', severity: 'High' },
+                { date: '2026-07-06', project: 'Runaki', team: 'Field Ops', reason: 'Human error', severity: 'Medium' },
+                { date: '2026-07-03', project: 'Leaflet', team: 'KYC Team', reason: 'Data delay', severity: 'Low' },
+                { date: '2026-07-01', project: 'Runaki', team: 'Billing', reason: 'Negligence', severity: 'Critical' },
+            ],
+            fraud: {
+                cases: [
+                    { type: 'Refund Validation', status: 'Flagged', amount: 5200 },
+                    { type: 'Refund Validation', status: 'Resolved', amount: 3100 },
+                    { type: 'Policy Abuse', status: 'Flagged', amount: 0 },
+                    { type: 'Agent Monitoring', status: 'Resolved', amount: 0 },
+                    { type: 'Refund Validation', status: 'Resolved', amount: 8700 },
+                ],
+                alerts: [
+                    { text: '🚨 Unusual refund pattern detected in Runaki', time: '2 min ago', severity: 'critical' },
+                    { text: '⚠️ KYC document mismatch for Leaflet client #1024', time: '15 min ago', severity: 'warning' },
+                    { text: '✅ Fraud case F-102 resolved successfully', time: '1 hour ago', severity: 'success' },
+                    { text: 'ℹ️ New compliance report due tomorrow for Runaki', time: '3 hours ago', severity: 'info' },
+                ]
+            },
+            leadership: {
+                departments: [
+                    { name: 'Runaki - Contact Center', compliance: 95, risk: 'Low' },
+                    { name: 'Runaki - Billing', compliance: 88, risk: 'Medium' },
+                    { name: 'Runaki - Field Ops', compliance: 72, risk: 'High' },
+                    { name: 'Leaflet - KYC', compliance: 90, risk: 'Medium' },
+                    { name: 'Leaflet - Compliance', compliance: 65, risk: 'High' },
+                    { name: 'Leaflet - Data Quality', compliance: 82, risk: 'Low' },
+                ]
+            }
+        };
+
+        function updateTime() {
+            document.getElementById('current-time').textContent = new Date().toLocaleString();
+        }
+        setInterval(updateTime, 1000);
+        updateTime();
+
+        function renderCompliance() {
+            const tbody = document.getElementById('compliance-body');
+            tbody.innerHTML = dashboardData.compliance.map(row => `
+                <tr>
+                    <td><strong>${row.project}</strong></td>
+                    <td>${row.team}</td>
+                    <td>${row.report}</td>
+                    <td>${row.due}</td>
+                    <td><span class="status-badge status-${row.status.toLowerCase()}">● ${row.status}</span></td>
+                </tr>
+            `).join('');
+        }
+
+        function renderBallDrops() {
+            const container = document.getElementById('ball-drop-timeline');
+            container.innerHTML = dashboardData.ballDrops.map(bd => `
+                <div style="display:flex;justify-content:space-between;padding:10px 15px;border-bottom:1px solid #f1f3f5;align-items:center;">
+                    <div>
+                        <strong>${bd.project}</strong> - ${bd.team}
+                        <div style="font-size:13px;color:#7f8c8d;">${bd.reason}</div>
+                    </div>
+                    <div style="text-align:right;">
+                        <span style="font-size:12px;color:#7f8c8d;">${bd.date}</span>
+                        <span class="status-badge status-${bd.severity === 'Critical' ? 'missed' : bd.severity === 'High' ? 'pending' : 'submitted'}">
+                            ${bd.severity}
+                        </span>
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        function renderAlerts() {
+            const container = document.getElementById('alert-feed');
+            container.innerHTML = dashboardData.fraud.alerts.map(alert => `
+                <div class="alert-item ${alert.severity}">
+                    <span>${alert.text}</span>
+                    <span class="time">${alert.time}</span>
+                </div>
+            `).join('');
+        }
+
+        function renderHeatmap() {
+            const container = document.getElementById('heatmap-container');
+            container.innerHTML = dashboardData.leadership.departments.map(dept => `
+                <div class="heatmap-item risk-${dept.risk.toLowerCase()}">
+                    <div class="dept">${dept.name}</div>
+                    <div class="score">${dept.compliance}%</div>
+                    <div style="font-size:11px;opacity:0.8;">Risk: ${dept.risk}</div>
+                </div>
+            `).join('');
+        }
+
+        let statusChart, fraudChart, scorecardChart;
+
+        function initCharts() {
+            const ctx1 = document.getElementById('statusChart').getContext('2d');
+            const statusCounts = {
+                Submitted: dashboardData.compliance.filter(c => c.status === 'Submitted').length,
+                Pending: dashboardData.compliance.filter(c => c.status === 'Pending').length,
+                Missed: dashboardData.compliance.filter(c => c.status === 'Missed').length,
+            };
+            
+            statusChart = new Chart(ctx1, {
+                type: 'doughnut',
+                data: {
+                    labels: ['✅ Submitted', '⏳ Pending', '❌ Missed'],
+                    datasets: [{
+                        data: [statusCounts.Submitted, statusCounts.Pending, statusCounts.Missed],
+                        backgroundColor: ['#2ecc71', '#f1c40f', '#e74c3c'],
+                        borderWidth: 0
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: { legend: { position: 'bottom' } }
+                }
+            });
+
+            const ctx2 = document.getElementById('fraudChart').getContext('2d');
+            const fraudCounts = {
+                Flagged: dashboardData.fraud.cases.filter(c => c.status === 'Flagged').length,
+                Resolved: dashboardData.fraud.cases.filter(c => c.status === 'Resolved').length,
+            };
+            
+            fraudChart = new Chart(ctx2, {
+                type: 'pie',
+                data: {
+                    labels: ['🚩 Flagged', '✅ Resolved'],
+                    datasets: [{
+                        data: [fraudCounts.Flagged, fraudCounts.Resolved],
+                        backgroundColor: ['#e74c3c', '#2ecc71'],
+                        borderWidth: 0
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: { legend: { position: 'bottom' } }
+                }
+            });
+
+            const ctx3 = document.getElementById('scorecardChart').getContext('2d');
+            scorecardChart = new Chart(ctx3, {
+                type: 'bar',
+                data: {
+                    labels: dashboardData.leadership.departments.map(d => d.name),
+                    datasets: [{
+                        label: 'Compliance %',
+                        data: dashboardData.leadership.departments.map(d => d.compliance),
+                        backgroundColor: dashboardData.leadership.departments.map(d => 
+                            d.compliance >= 90 ? '#2ecc71' : d.compliance >= 75 ? '#f1c40f' : '#e74c3c'
+                        ),
+                        borderRadius: 5
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: { legend: { display: false } },
+                    scales: { y: { beginAtZero: true, max: 100, ticks: { callback: v => v + '%' } } }
+                }
+            });
+        }
+
+        function refreshDashboard() {
+            document.getElementById('last-update').textContent = 'Refreshing...';
+            setTimeout(() => {
+                document.getElementById('last-update').textContent = new Date().toLocaleString();
+                renderCompliance();
+                renderBallDrops();
+                renderAlerts();
+                renderHeatmap();
+                if (statusChart) statusChart.destroy();
+                if (fraudChart) fraudChart.destroy();
+                if (scorecardChart) scorecardChart.destroy();
+                initCharts();
+            }, 500);
+        }
+
+        document.addEventListener('DOMContentLoaded', function() {
+            renderCompliance();
+            renderBallDrops();
+            renderAlerts();
+            renderHeatmap();
+            initCharts();
+            document.getElementById('last-update').textContent = new Date().toLocaleString();
+        });
+
+        window.refreshDashboard = refreshDashboard;
+    </script>
+
+</body>
+</html>
