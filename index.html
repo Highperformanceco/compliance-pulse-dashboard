@@ -14,13 +14,13 @@
         
         body {
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            background: #f0f2f5;
+            background: #e8f5e9;
             color: #1a1a2e;
             padding: 20px;
         }
 
         .header {
-            background: linear-gradient(135deg, #1a1a2e, #16213e);
+            background: linear-gradient(135deg, #0d3b2e, #1a6b4a, #2ecc71);
             color: white;
             padding: 25px 30px;
             border-radius: 15px;
@@ -29,7 +29,7 @@
             justify-content: space-between;
             align-items: center;
             flex-wrap: wrap;
-            box-shadow: 0 4px 20px rgba(0,0,0,0.2);
+            box-shadow: 0 8px 32px rgba(46, 204, 113, 0.3);
         }
         
         .header-left h1 {
@@ -44,7 +44,7 @@
         
         .header-left .subtitle {
             font-size: 14px;
-            opacity: 0.8;
+            opacity: 0.85;
             margin-top: 5px;
         }
         
@@ -54,8 +54,8 @@
         
         .header-right .timestamp {
             font-size: 14px;
-            opacity: 0.9;
-            background: rgba(255,255,255,0.1);
+            opacity: 0.95;
+            background: rgba(255,255,255,0.15);
             padding: 8px 16px;
             border-radius: 20px;
             display: inline-block;
@@ -69,11 +69,13 @@
         }
         
         .stat-item {
-            background: rgba(255,255,255,0.1);
+            background: rgba(255,255,255,0.12);
             padding: 10px 20px;
             border-radius: 10px;
             text-align: center;
             min-width: 100px;
+            backdrop-filter: blur(5px);
+            border: 1px solid rgba(255,255,255,0.1);
         }
         
         .stat-item .number {
@@ -84,17 +86,16 @@
         
         .stat-item .label {
             font-size: 12px;
-            opacity: 0.8;
+            opacity: 0.85;
             text-transform: uppercase;
             letter-spacing: 1px;
         }
         
-        .stat-item.green .number { color: #2ecc71; }
+        .stat-item.green .number { color: #a8f0c0; }
         .stat-item.yellow .number { color: #f1c40f; }
-        .stat-item.red .number { color: #e74c3c; }
-        .stat-item.blue .number { color: #3498db; }
-        .stat-item.purple .number { color: #9b59b6; }
-        .stat-item.orange .number { color: #e67e22; }
+        .stat-item.red .number { color: #ff6b6b; }
+        .stat-item.blue .number { color: #74b9ff; }
+        .stat-item.purple .number { color: #a29bfe; }
 
         .dashboard-grid {
             display: grid;
@@ -103,22 +104,23 @@
         }
         
         .card {
-            background: white;
+            background: rgba(255, 255, 255, 0.95);
             border-radius: 15px;
             padding: 20px;
-            box-shadow: 0 2px 15px rgba(0,0,0,0.06);
+            box-shadow: 0 4px 20px rgba(46, 204, 113, 0.1);
             grid-column: span 12;
             transition: all 0.3s;
+            border: 1px solid rgba(46, 204, 113, 0.1);
         }
         
         .card:hover {
-            box-shadow: 0 4px 25px rgba(0,0,0,0.1);
+            box-shadow: 0 8px 35px rgba(46, 204, 113, 0.15);
         }
         
         .card-title {
             font-size: 16px;
             font-weight: 600;
-            color: #2c3e50;
+            color: #0d3b2e;
             margin-bottom: 15px;
             display: flex;
             justify-content: space-between;
@@ -128,11 +130,12 @@
         }
         
         .card-title .badge {
-            background: #ecf0f1;
+            background: #e8f5e9;
             padding: 4px 12px;
             border-radius: 20px;
             font-size: 12px;
             font-weight: 400;
+            color: #0d3b2e;
         }
 
         .card-title .label-tag {
@@ -144,11 +147,11 @@
             text-transform: uppercase;
         }
         
-        .label-tag.submitted { background: #d4edda; color: #155724; }
+        .label-tag.submitted { background: #d4edda; color: #0d3b2e; }
         .label-tag.pending { background: #fff3cd; color: #856404; }
         .label-tag.missed { background: #f8d7da; color: #721c24; }
         .label-tag.flagged { background: #fce4ec; color: #c62828; }
-        .label-tag.resolved { background: #e8f5e9; color: #2e7d32; }
+        .label-tag.resolved { background: #e8f5e9; color: #0d3b2e; }
 
         .compliance-table {
             width: 100%;
@@ -159,20 +162,20 @@
         .compliance-table th {
             text-align: left;
             padding: 12px 10px;
-            background: #f8f9fa;
-            color: #2c3e50;
+            background: #e8f5e9;
+            color: #0d3b2e;
             font-weight: 600;
-            border-bottom: 2px solid #e9ecef;
+            border-bottom: 2px solid #2ecc71;
             white-space: nowrap;
         }
         
         .compliance-table td {
             padding: 10px;
-            border-bottom: 1px solid #f1f3f5;
+            border-bottom: 1px solid #e8f5e9;
         }
         
         .compliance-table tr:hover {
-            background: #f8f9fa;
+            background: #f0faf2;
         }
         
         .status-badge {
@@ -185,7 +188,7 @@
         
         .status-submitted {
             background: #d4edda;
-            color: #155724;
+            color: #0d3b2e;
         }
         
         .status-pending {
@@ -203,14 +206,21 @@
             padding: 2px 10px;
             border-radius: 12px;
             font-size: 11px;
-            background: #e9ecef;
-            color: #495057;
+            background: #e8f5e9;
+            color: #0d3b2e;
         }
 
         .chart-container {
             position: relative;
             height: 250px;
             width: 100%;
+        }
+
+        .chart-container-3d {
+            position: relative;
+            height: 250px;
+            width: 100%;
+            filter: drop-shadow(0 8px 25px rgba(46, 204, 113, 0.2));
         }
         
         .chart-row {
@@ -226,15 +236,15 @@
         }
 
         .fraud-section {
-            background: #f8f9fa;
+            background: #f0faf2;
             border-radius: 10px;
             padding: 15px;
-            border: 1px solid #e9ecef;
+            border: 1px solid #d4edda;
         }
         
         .fraud-section h4 {
             font-size: 14px;
-            color: #2c3e50;
+            color: #0d3b2e;
             margin-bottom: 10px;
         }
         
@@ -258,13 +268,14 @@
         .offender-table th {
             text-align: left;
             padding: 6px 8px;
-            background: #e9ecef;
+            background: #e8f5e9;
             font-weight: 600;
+            color: #0d3b2e;
         }
         
         .offender-table td {
             padding: 6px 8px;
-            border-bottom: 1px solid #dee2e6;
+            border-bottom: 1px solid #e8f5e9;
         }
 
         .offender-table .high { color: #e74c3c; font-weight: 600; }
@@ -285,26 +296,27 @@
         
         .tab-btn {
             padding: 6px 16px;
-            border: 1px solid #dee2e6;
+            border: 1px solid #d4edda;
             border-radius: 20px;
             background: white;
             cursor: pointer;
             font-size: 12px;
             transition: all 0.3s;
+            color: #0d3b2e;
         }
         
         .tab-btn.active {
-            background: #1a1a2e;
+            background: #2ecc71;
             color: white;
-            border-color: #1a1a2e;
+            border-color: #2ecc71;
         }
         
         .tab-btn:hover {
-            background: #e9ecef;
+            background: #e8f5e9;
         }
         
         .tab-btn.active:hover {
-            background: #2c3e50;
+            background: #27ae60;
         }
 
         .heatmap-grid {
@@ -319,11 +331,12 @@
             text-align: center;
             color: white;
             font-weight: 600;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
         }
         
         .heatmap-item .dept {
             font-size: 14px;
-            opacity: 0.9;
+            opacity: 0.95;
         }
         
         .heatmap-item .score {
@@ -331,80 +344,15 @@
             margin-top: 5px;
         }
         
-        .risk-critical { background: #c0392b; }
-        .risk-high { background: #e74c3c; }
-        .risk-medium { background: #f39c12; }
-        .risk-low { background: #2ecc71; }
-        .risk-very-low { background: #27ae60; }
-
-        .risk-matrix {
-            display: grid;
-            grid-template-columns: auto repeat(5, 1fr);
-            gap: 4px;
-            font-size: 12px;
-            margin-top: 10px;
-        }
-        
-        .risk-matrix .cell {
-            padding: 8px;
-            text-align: center;
-            border-radius: 4px;
-            font-weight: 600;
-        }
-        
-        .risk-matrix .header-cell {
-            background: #2c3e50;
-            color: white;
-            padding: 8px;
-            text-align: center;
-            border-radius: 4px;
-            font-weight: 600;
-        }
-        
-        .risk-matrix .row-label {
-            background: #ecf0f1;
-            padding: 8px;
-            text-align: center;
-            border-radius: 4px;
-            font-weight: 600;
-        }
-
-        .risk-color-1 { background: #27ae60; color: white; }
-        .risk-color-2 { background: #2ecc71; color: white; }
-        .risk-color-3 { background: #f1c40f; color: #1a1a2e; }
-        .risk-color-4 { background: #e67e22; color: white; }
-        .risk-color-5 { background: #c0392b; color: white; }
-
-        .audit-ratio {
-            display: flex;
-            gap: 15px;
-            flex-wrap: wrap;
-            justify-content: center;
-            margin-top: 10px;
-        }
-        
-        .audit-item {
-            text-align: center;
-            padding: 10px 20px;
-            background: #f8f9fa;
-            border-radius: 10px;
-            min-width: 80px;
-        }
-        
-        .audit-item .value {
-            font-size: 20px;
-            font-weight: 700;
-        }
-        
-        .audit-item .label {
-            font-size: 11px;
-            color: #7f8c8d;
-        }
+        .risk-critical { background: linear-gradient(135deg, #c0392b, #e74c3c); }
+        .risk-high { background: linear-gradient(135deg, #e67e22, #f39c12); }
+        .risk-medium { background: linear-gradient(135deg, #0d3b2e, #2ecc71); }
+        .risk-low { background: linear-gradient(135deg, #1a6b4a, #2ecc71); }
 
         .refresh-btn {
-            background: #1a1a2e;
+            background: rgba(255,255,255,0.2);
             color: white;
-            border: none;
+            border: 1px solid rgba(255,255,255,0.3);
             padding: 8px 20px;
             border-radius: 20px;
             cursor: pointer;
@@ -413,52 +361,28 @@
         }
         
         .refresh-btn:hover {
-            background: #2c3e50;
+            background: rgba(255,255,255,0.3);
             transform: scale(1.05);
         }
 
         .config-panel {
-            background: #f8f9fa;
+            background: #f0faf2;
             border-radius: 10px;
             padding: 15px;
             margin-top: 10px;
-            border: 1px dashed #dee2e6;
+            border: 1px dashed #2ecc71;
         }
         
         .config-panel h4 {
             font-size: 13px;
-            color: #6c757d;
+            color: #0d3b2e;
             margin-bottom: 8px;
         }
         
         .config-panel .hint {
             font-size: 12px;
-            color: #6c757d;
+            color: #1a6b4a;
             font-family: monospace;
-        }
-
-        .risk-summary {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
-            gap: 15px;
-            margin: 15px 0;
-        }
-        
-        .risk-card {
-            padding: 15px;
-            border-radius: 10px;
-            text-align: center;
-            color: white;
-        }
-        
-        .risk-card .number {
-            font-size: 28px;
-            font-weight: 700;
-        }
-        
-        .risk-card .label {
-            font-size: 12px;
-            opacity: 0.9;
         }
 
         @media (min-width: 768px) {
@@ -497,6 +421,44 @@
                 grid-template-columns: 1fr;
             }
         }
+
+        .ball-drop-bar-container {
+            position: relative;
+            height: 280px;
+            width: 100%;
+        }
+
+        /* 3D Donut Effect */
+        .donut-3d-wrapper {
+            position: relative;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 250px;
+        }
+
+        .donut-3d-wrapper canvas {
+            filter: drop-shadow(0 8px 30px rgba(46, 204, 113, 0.25));
+        }
+
+        .donut-label {
+            position: absolute;
+            text-align: center;
+            pointer-events: none;
+            z-index: 1;
+        }
+        
+        .donut-label .number {
+            font-size: 28px;
+            font-weight: 700;
+            color: #0d3b2e;
+            display: block;
+        }
+        
+        .donut-label .text {
+            font-size: 12px;
+            color: #1a6b4a;
+        }
     </style>
 </head>
 <body>
@@ -527,10 +489,6 @@
                 <div class="stat-item purple">
                     <span class="number">5</span>
                     <span class="label">Total Offenders</span>
-                </div>
-                <div class="stat-item orange">
-                    <span class="number">17</span>
-                    <span class="label">Open Risks</span>
                 </div>
             </div>
         </div>
@@ -568,7 +526,7 @@
                             <th>Status</th>
                         </tr>
                     </thead>
-                    <tbody id="compliance-body">
+                    <tbody>
                         <tr>
                             <td><strong>A</strong></td>
                             <td>Dispatch</td>
@@ -615,29 +573,33 @@
             </div>
         </div>
         
-        <!-- ===== CARD 2: Project Overview ===== -->
+        <!-- ===== CARD 2: Project Overview - 3D Donut ===== -->
         <div class="card col-span-4">
             <div class="card-title">
                 📊 Project Overview
-                <span class="badge">With Labels</span>
+                <span class="badge">3D Donut</span>
             </div>
             <div style="display:flex; gap:10px; flex-wrap:wrap; margin-bottom:15px;">
                 <span class="label-tag submitted">✅ Submitted: 1</span>
                 <span class="label-tag pending">⏳ Pending: 1</span>
                 <span class="label-tag missed">❌ Missed: 2</span>
             </div>
-            <div class="chart-container">
+            <div class="donut-3d-wrapper">
+                <div class="donut-label">
+                    <span class="number">75%</span>
+                    <span class="text">Compliance</span>
+                </div>
                 <canvas id="statusChart"></canvas>
             </div>
         </div>
         
-        <!-- ===== CARD 3: Report Issues / Ball Drops ===== -->
+        <!-- ===== CARD 3: Ball Drop History with Department Labels ===== -->
         <div class="card col-span-6">
             <div class="card-title">
                 📊 Report Issues / Ball Drops History
-                <span class="badge">Bar Chart</span>
+                <span class="badge">By Department</span>
             </div>
-            <div class="chart-container" style="height:280px;">
+            <div class="ball-drop-bar-container">
                 <canvas id="ballDropChart"></canvas>
             </div>
         </div>
@@ -664,7 +626,7 @@
                         <div><span class="count green">7</span> Clean Agents</div>
                     </div>
                     
-                    <h5 style="margin-top:12px; font-size:13px; color:#2c3e50;">Top Offenders</h5>
+                    <h5 style="margin-top:12px; font-size:13px; color:#0d3b2e;">Top Offenders</h5>
                     <table class="offender-table">
                         <thead>
                             <tr><th>Agent Name</th><th>Order ID</th><th>Ticket ID</th><th>Comments</th><th>Count</th></tr>
@@ -694,7 +656,7 @@
                         <div><span class="count green">37</span> Valid</div>
                     </div>
                     
-                    <h5 style="margin-top:12px; font-size:13px; color:#2c3e50;">Faulty Agent History</h5>
+                    <h5 style="margin-top:12px; font-size:13px; color:#0d3b2e;">Faulty Agent History</h5>
                     <table class="offender-table">
                         <thead>
                             <tr><th>Agent Name</th><th>Order ID</th><th>Ticket ID</th><th>Comments</th><th>Count</th></tr>
@@ -723,7 +685,7 @@
                         <div><span class="count green">22</span> Valid</div>
                     </div>
                     
-                    <h5 style="margin-top:12px; font-size:13px; color:#2c3e50;">Offender History</h5>
+                    <h5 style="margin-top:12px; font-size:13px; color:#0d3b2e;">Offender History</h5>
                     <table class="offender-table">
                         <thead>
                             <tr><th>Agent Name</th><th>Order ID</th><th>Ticket ID</th><th>Comments</th><th>Amount</th></tr>
@@ -744,127 +706,7 @@
             </div>
         </div>
         
-        <!-- ===== CARD 5: Risk Management (New) ===== -->
-        <div class="card col-span-12">
-            <div class="card-title">
-                ⚠️ Risk Management Dashboard
-                <span class="badge">Executive View</span>
-            </div>
-            
-            <!-- Risk Summary Cards -->
-            <div class="risk-summary">
-                <div class="risk-card" style="background: linear-gradient(135deg, #c0392b, #e74c3c);">
-                    <div class="number">17</div>
-                    <div class="label">Failed / Open Risks</div>
-                </div>
-                <div class="risk-card" style="background: linear-gradient(135deg, #e67e22, #f39c12);">
-                    <div class="number">25</div>
-                    <div class="label">Manual Check Required</div>
-                </div>
-                <div class="risk-card" style="background: linear-gradient(135deg, #2980b9, #3498db);">
-                    <div class="number">37</div>
-                    <div class="label">Planned Actions</div>
-                </div>
-                <div class="risk-card" style="background: linear-gradient(135deg, #27ae60, #2ecc71);">
-                    <div class="number">20</div>
-                    <div class="label">TBD / Under Review</div>
-                </div>
-            </div>
-            
-            <div class="chart-row-2">
-                <div>
-                    <h4 style="font-size:14px;color:#2c3e50;margin-bottom:10px;">Top 5 Risks</h4>
-                    <div class="chart-container" style="height:200px;">
-                        <canvas id="topRisksChart"></canvas>
-                    </div>
-                </div>
-                <div>
-                    <h4 style="font-size:14px;color:#2c3e50;margin-bottom:10px;">Compliance Risk Trend</h4>
-                    <div class="chart-container" style="height:200px;">
-                        <canvas id="complianceRiskChart"></canvas>
-                    </div>
-                </div>
-            </div>
-            
-            <div class="chart-row-2" style="margin-top:15px;">
-                <div>
-                    <h4 style="font-size:14px;color:#2c3e50;margin-bottom:10px;">Audit Check Ratio</h4>
-                    <div class="chart-container" style="height:200px;">
-                        <canvas id="auditChart"></canvas>
-                    </div>
-                </div>
-                <div>
-                    <h4 style="font-size:14px;color:#2c3e50;margin-bottom:10px;">Risk Action Plan</h4>
-                    <div class="chart-container" style="height:200px;">
-                        <canvas id="actionPlanChart"></canvas>
-                    </div>
-                </div>
-            </div>
-            
-            <!-- Risk Matrix -->
-            <div style="margin-top:15px;">
-                <h4 style="font-size:14px;color:#2c3e50;margin-bottom:10px;">Risk Heat Map Matrix</h4>
-                <div style="overflow-x:auto;">
-                    <div class="risk-matrix" style="grid-template-columns: auto repeat(5, 1fr); min-width:500px;">
-                        <div class="header-cell">Risk Rating</div>
-                        <div class="header-cell">Severe</div>
-                        <div class="header-cell">Major</div>
-                        <div class="header-cell">Moderate</div>
-                        <div class="header-cell">Minor</div>
-                        <div class="header-cell">Insignificant</div>
-                        
-                        <div class="row-label">Almost Certain (5)</div>
-                        <div class="cell risk-color-5">5</div>
-                        <div class="cell risk-color-5">5</div>
-                        <div class="cell risk-color-4">4</div>
-                        <div class="cell risk-color-3">3</div>
-                        <div class="cell risk-color-2">2</div>
-                        
-                        <div class="row-label">Likely (4)</div>
-                        <div class="cell risk-color-5">4</div>
-                        <div class="cell risk-color-4">4</div>
-                        <div class="cell risk-color-3">3</div>
-                        <div class="cell risk-color-2">2</div>
-                        <div class="cell risk-color-1">1</div>
-                        
-                        <div class="row-label">Moderate (3)</div>
-                        <div class="cell risk-color-4">3</div>
-                        <div class="cell risk-color-3">3</div>
-                        <div class="cell risk-color-2">2</div>
-                        <div class="cell risk-color-1">1</div>
-                        <div class="cell risk-color-1">1</div>
-                        
-                        <div class="row-label">Unlikely (2)</div>
-                        <div class="cell risk-color-3">2</div>
-                        <div class="cell risk-color-2">2</div>
-                        <div class="cell risk-color-1">1</div>
-                        <div class="cell risk-color-1">1</div>
-                        <div class="cell risk-color-1">1</div>
-                        
-                        <div class="row-label">Rare (1)</div>
-                        <div class="cell risk-color-2">1</div>
-                        <div class="cell risk-color-1">1</div>
-                        <div class="cell risk-color-1">1</div>
-                        <div class="cell risk-color-1">1</div>
-                        <div class="cell risk-color-1">1</div>
-                    </div>
-                </div>
-                <div style="display:flex; gap:15px; margin-top:10px; flex-wrap:wrap; justify-content:center; font-size:12px;">
-                    <span><span style="display:inline-block; width:15px; height:15px; background:#c0392b; border-radius:3px;"></span> Critical</span>
-                    <span><span style="display:inline-block; width:15px; height:15px; background:#e67e22; border-radius:3px;"></span> High</span>
-                    <span><span style="display:inline-block; width:15px; height:15px; background:#f1c40f; border-radius:3px;"></span> Medium</span>
-                    <span><span style="display:inline-block; width:15px; height:15px; background:#2ecc71; border-radius:3px;"></span> Low</span>
-                    <span><span style="display:inline-block; width:15px; height:15px; background:#27ae60; border-radius:3px;"></span> Very Low</span>
-                </div>
-            </div>
-            
-            <div class="config-panel">
-                <h4>🔧 Risk Management Controls</h4>
-                <span class="hint">Adjust risk thresholds · Add new risk categories · Configure audit ratios · Export risk reports</span>
-            </div>
-        </div>
-        
-        <!-- ===== CARD 6: Leadership Summary ===== -->
+        <!-- ===== CARD 5: Leadership Summary ===== -->
         <div class="card col-span-12">
             <div class="card-title">
                 🏆 Leadership Summary
@@ -872,13 +714,13 @@
             </div>
             <div class="chart-row-2">
                 <div>
-                    <h4 style="font-size:14px;color:#2c3e50;margin-bottom:10px;">Department Compliance Scorecards</h4>
+                    <h4 style="font-size:14px;color:#0d3b2e;margin-bottom:10px;">Department Compliance Scorecards</h4>
                     <div class="chart-container" style="height:200px;">
                         <canvas id="scorecardChart"></canvas>
                     </div>
                 </div>
                 <div>
-                    <h4 style="font-size:14px;color:#2c3e50;margin-bottom:10px;">Risk Heatmap by Department</h4>
+                    <h4 style="font-size:14px;color:#0d3b2e;margin-bottom:10px;">Risk Heatmap by Department</h4>
                     <div class="heatmap-grid" id="heatmap-container">
                         <div class="heatmap-item risk-medium">
                             <div class="dept">Dispatch</div>
@@ -932,12 +774,12 @@
         }
 
         // ============================================================
-        // 3. CHARTS - Using setTimeout to ensure DOM is ready
+        // 3. CHARTS
         // ============================================================
         let charts = {};
 
         function initCharts() {
-            // Status Chart (Doughnut)
+            // 3D Donut Chart - Status
             const ctx1 = document.getElementById('statusChart');
             if (ctx1) {
                 charts.status = new Chart(ctx1, {
@@ -946,163 +788,158 @@
                         labels: ['✅ Submitted', '⏳ Pending', '❌ Missed'],
                         datasets: [{
                             data: [1, 1, 2],
-                            backgroundColor: ['#2ecc71', '#f1c40f', '#e74c3c'],
-                            borderWidth: 0
+                            backgroundColor: [
+                                'rgba(46, 204, 113, 0.9)',
+                                'rgba(241, 196, 15, 0.9)',
+                                'rgba(231, 76, 60, 0.9)'
+                            ],
+                            borderColor: [
+                                '#2ecc71',
+                                '#f1c40f',
+                                '#e74c3c'
+                            ],
+                            borderWidth: 3,
+                            hoverOffset: 12,
+                            offset: 6
                         }]
                     },
                     options: {
                         responsive: true,
                         maintainAspectRatio: false,
-                        plugins: { legend: { position: 'bottom' } }
-                    }
+                        cutout: '70%',
+                        plugins: {
+                            legend: {
+                                position: 'bottom',
+                                labels: {
+                                    font: { size: 11 },
+                                    padding: 15,
+                                    usePointStyle: true,
+                                    pointStyle: 'circle'
+                                }
+                            }
+                        },
+                        animation: {
+                            animateRotate: true,
+                            duration: 1500
+                        }
+                    },
+                    plugins: [{
+                        id: 'shadowPlugin',
+                        beforeDraw: function(chart) {
+                            const ctx = chart.ctx;
+                            ctx.shadowColor = 'rgba(46, 204, 113, 0.3)';
+                            ctx.shadowBlur = 20;
+                            ctx.shadowOffsetX = 0;
+                            ctx.shadowOffsetY = 8;
+                        },
+                        afterDraw: function(chart) {
+                            const ctx = chart.ctx;
+                            ctx.shadowColor = 'transparent';
+                            ctx.shadowBlur = 0;
+                        }
+                    }]
                 });
             }
 
-            // Ball Drop Bar Chart
+            // Ball Drop Bar Chart with Department Labels
             const ctx2 = document.getElementById('ballDropChart');
             if (ctx2) {
                 charts.ballDrop = new Chart(ctx2, {
                     type: 'bar',
                     data: {
-                        labels: ['2026-07-08', '2026-07-07', '2026-07-06', '2026-07-05', '2026-07-04', '2026-07-03', '2026-07-02'],
+                        labels: ['Dispatch', 'SSC', 'HR', 'RTM', 'Dispatch', 'SSC', 'HR'],
                         datasets: [{
                             label: 'Ball Drops',
                             data: [3, 2, 1, 4, 2, 3, 1],
-                            backgroundColor: ['#e74c3c', '#f39c12', '#f1c40f', '#e74c3c', '#f39c12', '#f1c40f', '#e74c3c'],
-                            borderRadius: 5
+                            backgroundColor: [
+                                '#2ecc71', '#27ae60', '#1a6b4a', '#0d3b2e',
+                                '#2ecc71', '#27ae60', '#1a6b4a'
+                            ],
+                            borderRadius: 8,
+                            borderSkipped: false,
+                            barPercentage: 0.7
                         }]
                     },
                     options: {
                         responsive: true,
                         maintainAspectRatio: false,
-                        plugins: { legend: { display: false } },
+                        plugins: {
+                            legend: { display: false },
+                            tooltip: {
+                                callbacks: {
+                                    label: function(context) {
+                                        return context.parsed.y + ' issues';
+                                    }
+                                }
+                            }
+                        },
                         scales: {
-                            y: { beginAtZero: true, ticks: { stepSize: 1 } }
-                        }
-                    }
-                });
-            }
-
-            // Top 5 Risks (Bar Chart)
-            const ctx3 = document.getElementById('topRisksChart');
-            if (ctx3) {
-                charts.topRisks = new Chart(ctx3, {
-                    type: 'bar',
-                    data: {
-                        labels: ['Risk 1', 'Risk 2', 'Risk 3', 'Risk 4', 'Risk 5'],
-                        datasets: [{
-                            label: 'Risk Score',
-                            data: [25, 15, 45, 15, 29],
-                            backgroundColor: ['#e74c3c', '#f39c12', '#c0392b', '#f39c12', '#e67e22'],
-                            borderRadius: 5
-                        }]
-                    },
-                    options: {
-                        responsive: true,
-                        maintainAspectRatio: false,
-                        plugins: { legend: { display: false } },
-                        scales: {
-                            y: { beginAtZero: true }
-                        }
-                    }
-                });
-            }
-
-            // Compliance Risk Trend (Line Chart)
-            const ctx4 = document.getElementById('complianceRiskChart');
-            if (ctx4) {
-                charts.complianceRisk = new Chart(ctx4, {
-                    type: 'line',
-                    data: {
-                        labels: ['Q1 2021', 'Q2 2021', 'Q3 2021', 'Q4 2021', 'Q1 2022'],
-                        datasets: [{
-                            label: 'Risk Score',
-                            data: [37, 33, 15, 45, 25],
-                            borderColor: '#3498db',
-                            backgroundColor: 'rgba(52, 152, 219, 0.1)',
-                            fill: true,
-                            tension: 0.4,
-                            pointBackgroundColor: '#3498db',
-                            pointRadius: 5
-                        }]
-                    },
-                    options: {
-                        responsive: true,
-                        maintainAspectRatio: false,
-                        plugins: { legend: { display: false } },
-                        scales: {
-                            y: { beginAtZero: true }
-                        }
-                    }
-                });
-            }
-
-            // Audit Check Ratio (Doughnut)
-            const ctx5 = document.getElementById('auditChart');
-            if (ctx5) {
-                charts.audit = new Chart(ctx5, {
-                    type: 'doughnut',
-                    data: {
-                        labels: ['Failed (34%)', 'Manual Check (21%)', 'Planned (16%)', 'TBD (29%)'],
-                        datasets: [{
-                            data: [34, 21, 16, 29],
-                            backgroundColor: ['#e74c3c', '#f39c12', '#3498db', '#95a5a6'],
-                            borderWidth: 0
-                        }]
-                    },
-                    options: {
-                        responsive: true,
-                        maintainAspectRatio: false,
-                        plugins: { legend: { position: 'bottom', labels: { font: { size: 10 } } } }
-                    }
-                });
-            }
-
-            // Action Plan Chart (Bar)
-            const ctx6 = document.getElementById('actionPlanChart');
-            if (ctx6) {
-                charts.actionPlan = new Chart(ctx6, {
-                    type: 'bar',
-                    data: {
-                        labels: ['Failed', 'Manual Check', 'Planned', 'Planned', 'TBD'],
-                        datasets: [{
-                            label: 'Actions',
-                            data: [17, 25, 37, 20, 20],
-                            backgroundColor: ['#e74c3c', '#f39c12', '#2ecc71', '#3498db', '#95a5a6'],
-                            borderRadius: 5
-                        }]
-                    },
-                    options: {
-                        responsive: true,
-                        maintainAspectRatio: false,
-                        plugins: { legend: { display: false } },
-                        scales: {
-                            y: { beginAtZero: true }
+                            y: {
+                                beginAtZero: true,
+                                ticks: { stepSize: 1, font: { size: 11 } },
+                                grid: { color: 'rgba(46, 204, 113, 0.1)' }
+                            },
+                            x: {
+                                grid: { display: false },
+                                ticks: { font: { size: 11, weight: '600' } }
+                            }
+                        },
+                        animation: {
+                            duration: 1200,
+                            easing: 'easeOutBounce'
                         }
                     }
                 });
             }
 
             // Scorecard Chart
-            const ctx7 = document.getElementById('scorecardChart');
-            if (ctx7) {
-                charts.scorecard = new Chart(ctx7, {
+            const ctx3 = document.getElementById('scorecardChart');
+            if (ctx3) {
+                charts.scorecard = new Chart(ctx3, {
                     type: 'bar',
                     data: {
                         labels: ['Dispatch', 'SSC', 'HR', 'RTM'],
                         datasets: [{
                             label: 'Compliance %',
                             data: [75, 85, 60, 55],
-                            backgroundColor: ['#f39c12', '#2ecc71', '#e74c3c', '#c0392b'],
-                            borderRadius: 5
+                            backgroundColor: [
+                                'rgba(46, 204, 113, 0.8)',
+                                'rgba(46, 204, 113, 0.6)',
+                                'rgba(241, 196, 15, 0.8)',
+                                'rgba(231, 76, 60, 0.8)'
+                            ],
+                            borderRadius: 8,
+                            borderSkipped: false
                         }]
                     },
                     options: {
                         responsive: true,
                         maintainAspectRatio: false,
-                        plugins: { legend: { display: false } },
+                        plugins: {
+                            legend: { display: false },
+                            tooltip: {
+                                callbacks: {
+                                    label: function(context) {
+                                        return context.parsed.y + '%';
+                                    }
+                                }
+                            }
+                        },
                         scales: {
-                            y: { beginAtZero: true, max: 100, ticks: { callback: v => v + '%' } }
+                            y: {
+                                beginAtZero: true,
+                                max: 100,
+                                ticks: { callback: v => v + '%', font: { size: 10 } },
+                                grid: { color: 'rgba(46, 204, 113, 0.1)' }
+                            },
+                            x: {
+                                grid: { display: false },
+                                ticks: { font: { size: 10, weight: '600' } }
+                            }
+                        },
+                        animation: {
+                            duration: 1200,
+                            easing: 'easeOutBounce'
                         }
                     }
                 });
@@ -1110,20 +947,17 @@
         }
 
         // ============================================================
-        // 4. INIT - Wait for DOM and Chart.js to load
+        // 4. INIT
         // ============================================================
         document.addEventListener('DOMContentLoaded', function() {
-            // Small delay to ensure Chart.js is fully loaded
-            setTimeout(initCharts, 100);
+            setTimeout(initCharts, 150);
             document.getElementById('last-update').textContent = new Date().toLocaleString();
         });
 
-        // Also re-initialize if page is fully loaded
         window.addEventListener('load', function() {
-            setTimeout(initCharts, 200);
+            setTimeout(initCharts, 300);
         });
 
-        // Make functions global
         window.switchFraudTab = switchFraudTab;
     </script>
 
