@@ -93,6 +93,7 @@
         .stat-item.yellow .number { color: #f1c40f; }
         .stat-item.red .number { color: #e74c3c; }
         .stat-item.blue .number { color: #3498db; }
+        .stat-item.purple .number { color: #9b59b6; }
 
         .dashboard-grid {
             display: grid;
@@ -116,6 +117,8 @@
             display: flex;
             justify-content: space-between;
             align-items: center;
+            flex-wrap: wrap;
+            gap: 10px;
         }
         
         .card-title .badge {
@@ -126,10 +129,25 @@
             font-weight: 400;
         }
 
+        .card-title .label-tag {
+            display: inline-block;
+            padding: 4px 12px;
+            border-radius: 20px;
+            font-size: 11px;
+            font-weight: 600;
+            text-transform: uppercase;
+        }
+        
+        .label-tag.submitted { background: #d4edda; color: #155724; }
+        .label-tag.pending { background: #fff3cd; color: #856404; }
+        .label-tag.missed { background: #f8d7da; color: #721c24; }
+        .label-tag.flagged { background: #fce4ec; color: #c62828; }
+        .label-tag.resolved { background: #e8f5e9; color: #2e7d32; }
+
         .compliance-table {
             width: 100%;
             border-collapse: collapse;
-            font-size: 14px;
+            font-size: 13px;
         }
         
         .compliance-table th {
@@ -139,6 +157,7 @@
             color: #2c3e50;
             font-weight: 600;
             border-bottom: 2px solid #e9ecef;
+            white-space: nowrap;
         }
         
         .compliance-table td {
@@ -172,15 +191,14 @@
             background: #f8d7da;
             color: #721c24;
         }
-        
-        .status-flagged {
-            background: #fce4ec;
-            color: #c62828;
-        }
-        
-        .status-resolved {
-            background: #e8f5e9;
-            color: #2e7d32;
+
+        .channel-badge {
+            display: inline-block;
+            padding: 2px 10px;
+            border-radius: 12px;
+            font-size: 11px;
+            background: #e9ecef;
+            color: #495057;
         }
 
         .chart-container {
@@ -190,24 +208,77 @@
         
         .chart-row {
             display: grid;
+            grid-template-columns: 1fr 1fr 1fr;
+            gap: 20px;
+        }
+        
+        .chart-row-2 {
+            display: grid;
             grid-template-columns: 1fr 1fr;
             gap: 20px;
         }
 
+        .fraud-section {
+            background: #f8f9fa;
+            border-radius: 10px;
+            padding: 15px;
+            border: 1px solid #e9ecef;
+        }
+        
+        .fraud-section h4 {
+            font-size: 14px;
+            color: #2c3e50;
+            margin-bottom: 10px;
+        }
+        
+        .fraud-section .count {
+            font-size: 24px;
+            font-weight: 700;
+        }
+        
+        .fraud-section .count.red { color: #e74c3c; }
+        .fraud-section .count.green { color: #2ecc71; }
+        .fraud-section .count.blue { color: #3498db; }
+        .fraud-section .count.orange { color: #f39c12; }
+
+        .offender-table {
+            width: 100%;
+            font-size: 12px;
+            border-collapse: collapse;
+            margin-top: 8px;
+        }
+        
+        .offender-table th {
+            text-align: left;
+            padding: 6px 8px;
+            background: #e9ecef;
+            font-weight: 600;
+        }
+        
+        .offender-table td {
+            padding: 6px 8px;
+            border-bottom: 1px solid #dee2e6;
+        }
+
+        .offender-table .high { color: #e74c3c; font-weight: 600; }
+        .offender-table .medium { color: #f39c12; font-weight: 600; }
+        .offender-table .low { color: #2ecc71; font-weight: 600; }
+
         .alert-feed {
-            max-height: 250px;
+            max-height: 200px;
             overflow-y: auto;
         }
         
         .alert-item {
-            padding: 12px 15px;
+            padding: 10px 15px;
             border-left: 4px solid;
-            margin-bottom: 8px;
+            margin-bottom: 6px;
             background: #f8f9fa;
-            border-radius: 8px;
+            border-radius: 6px;
             display: flex;
             justify-content: space-between;
             align-items: center;
+            font-size: 13px;
         }
         
         .alert-item.critical { border-color: #e74c3c; }
@@ -216,7 +287,7 @@
         .alert-item.success { border-color: #2ecc71; }
         
         .alert-item .time {
-            font-size: 12px;
+            font-size: 11px;
             color: #7f8c8d;
         }
 
@@ -252,6 +323,7 @@
             .card.col-span-6 { grid-column: span 6; }
             .card.col-span-4 { grid-column: span 4; }
             .card.col-span-8 { grid-column: span 8; }
+            .card.col-span-3 { grid-column: span 3; }
         }
         
         @media (max-width: 767px) {
@@ -279,7 +351,7 @@
                 font-size: 20px;
             }
             
-            .chart-row {
+            .chart-row, .chart-row-2 {
                 grid-template-columns: 1fr;
             }
         }
@@ -319,10 +391,65 @@
             color: #6c757d;
             font-family: monospace;
         }
+
+        .scrollable-table {
+            max-height: 300px;
+            overflow-y: auto;
+        }
+
+        .tab-buttons {
+            display: flex;
+            gap: 8px;
+            flex-wrap: wrap;
+            margin-bottom: 10px;
+        }
+        
+        .tab-btn {
+            padding: 6px 16px;
+            border: 1px solid #dee2e6;
+            border-radius: 20px;
+            background: white;
+            cursor: pointer;
+            font-size: 12px;
+            transition: all 0.3s;
+        }
+        
+        .tab-btn.active {
+            background: #1a1a2e;
+            color: white;
+            border-color: #1a1a2e;
+        }
+        
+        .tab-btn:hover {
+            background: #e9ecef;
+        }
+        
+        .tab-btn.active:hover {
+            background: #2c3e50;
+        }
+
+        .fraud-config-table {
+            width: 100%;
+            font-size: 12px;
+            border-collapse: collapse;
+        }
+        
+        .fraud-config-table th {
+            text-align: left;
+            padding: 6px 8px;
+            background: #e9ecef;
+            font-weight: 600;
+        }
+        
+        .fraud-config-table td {
+            padding: 6px 8px;
+            border-bottom: 1px solid #dee2e6;
+        }
     </style>
 </head>
 <body>
 
+    <!-- ===== HEADER ===== -->
     <header class="header">
         <div class="header-left">
             <h1>⚡ Compliance <span>Pulse</span></h1>
@@ -330,20 +457,24 @@
             
             <div class="summary-stats">
                 <div class="stat-item blue">
-                    <span class="number" id="total-projects">2</span>
+                    <span class="number" id="total-projects">4</span>
                     <span class="label">Active Projects</span>
                 </div>
                 <div class="stat-item green">
-                    <span class="number" id="compliance-rate">94%</span>
+                    <span class="number" id="compliance-rate">75%</span>
                     <span class="label">Compliance Rate</span>
                 </div>
                 <div class="stat-item yellow">
-                    <span class="number" id="pending-reports">3</span>
+                    <span class="number" id="pending-reports">1</span>
                     <span class="label">Pending Reports</span>
                 </div>
                 <div class="stat-item red">
-                    <span class="number" id="missed-reports">1</span>
+                    <span class="number" id="missed-reports">2</span>
                     <span class="label">Missed Reports</span>
+                </div>
+                <div class="stat-item purple">
+                    <span class="number" id="total-offenders">5</span>
+                    <span class="label">Total Offenders</span>
                 </div>
             </div>
         </div>
@@ -359,21 +490,25 @@
         </div>
     </header>
 
+    <!-- ===== DASHBOARD GRID ===== -->
     <div class="dashboard-grid">
         
+        <!-- ===== CARD 1: Compliance Status ===== -->
         <div class="card col-span-8">
             <div class="card-title">
                 📋 Compliance Status
                 <span class="badge">Real-time</span>
             </div>
-            <div style="overflow-x: auto;">
+            <div class="scrollable-table">
                 <table class="compliance-table">
                     <thead>
                         <tr>
                             <th>Project</th>
                             <th>Department/Team</th>
                             <th>Report</th>
-                            <th>Due Date</th>
+                            <th>Owner</th>
+                            <th>Due Date / Time Span</th>
+                            <th>Channel</th>
                             <th>Status</th>
                         </tr>
                     </thead>
@@ -388,47 +523,150 @@
             </div>
         </div>
         
+        <!-- ===== CARD 2: Project Overview ===== -->
         <div class="card col-span-4">
             <div class="card-title">
                 📊 Project Overview
-                <span class="badge">Visual</span>
+                <span class="badge">With Labels</span>
+            </div>
+            <div style="display:flex; gap:10px; flex-wrap:wrap; margin-bottom:15px;">
+                <span class="label-tag submitted">✅ Submitted: 1</span>
+                <span class="label-tag pending">⏳ Pending: 1</span>
+                <span class="label-tag missed">❌ Missed: 2</span>
             </div>
             <div class="chart-container">
                 <canvas id="statusChart"></canvas>
             </div>
         </div>
         
+        <!-- ===== CARD 3: Report Issues / Ball Drops (Bar Chart) ===== -->
         <div class="card col-span-6">
             <div class="card-title">
-                🎯 Report Issues / Ball Drops
-                <span class="badge">Timeline</span>
+                📊 Report Issues / Ball Drops History
+                <span class="badge">Bar Chart</span>
             </div>
-            <div id="ball-drop-timeline">
+            <div class="chart-container" style="height:280px;">
+                <canvas id="ballDropChart"></canvas>
             </div>
         </div>
         
+        <!-- ===== CARD 4: Fraud Oversight - Three Sections ===== -->
         <div class="card col-span-6">
             <div class="card-title">
-                🛡️ Fraud Oversight & Alerts
-                <span class="badge">Monitoring</span>
+                🛡️ Fraud Oversight
+                <span class="badge">3 Sections</span>
             </div>
-            <div class="chart-row">
-                <div>
-                    <canvas id="fraudChart"></canvas>
+            
+            <!-- Tab Navigation -->
+            <div class="tab-buttons">
+                <button class="tab-btn active" onclick="switchFraudTab('personal')">👤 Personal Orders</button>
+                <button class="tab-btn" onclick="switchFraudTab('undispatch')">🚚 Un-Dispatch</button>
+                <button class="tab-btn" onclick="switchFraudTab('refund')">💰 Refund/Compensation</button>
+            </div>
+            
+            <!-- Tab Content -->
+            <div id="fraud-personal" class="fraud-tab">
+                <div class="fraud-section">
+                    <h4>👤 Agent Personal Order Validation</h4>
+                    <div style="display:flex; justify-content:space-between; flex-wrap:wrap;">
+                        <div><span class="count blue">12</span> Total Validated</div>
+                        <div><span class="count red">5</span> Offenders Found</div>
+                        <div><span class="count orange">7</span> Clean Agents</div>
+                    </div>
+                    
+                    <h5 style="margin-top:12px; font-size:13px; color:#2c3e50;">Top Offenders</h5>
+                    <table class="offender-table">
+                        <thead>
+                            <tr>
+                                <th>Agent Name</th>
+                                <th>Order ID</th>
+                                <th>Ticket ID</th>
+                                <th>Comments</th>
+                                <th>Count</th>
+                            </tr>
+                        </thead>
+                        <tbody id="offender-personal">
+                        </tbody>
+                    </table>
+                    
+                    <!-- Config Section -->
+                    <div class="config-panel" style="margin-top:10px;">
+                        <h4>⚙️ Agent Config</h4>
+                        <span class="hint">Add/Remove agents · Track order history · Set alert thresholds</span>
+                    </div>
                 </div>
-                <div>
-                    <div class="alert-feed" id="alert-feed">
+            </div>
+            
+            <div id="fraud-undispatch" class="fraud-tab" style="display:none;">
+                <div class="fraud-section">
+                    <h4>🚚 Manual Un-Dispatch Validation</h4>
+                    <div style="display:flex; justify-content:space-between; flex-wrap:wrap;">
+                        <div><span class="count blue">45</span> Total Validated</div>
+                        <div><span class="count red">8</span> Faulty Found</div>
+                        <div><span class="count green">37</span> Valid</div>
+                    </div>
+                    
+                    <h5 style="margin-top:12px; font-size:13px; color:#2c3e50;">Faulty Agent History</h5>
+                    <table class="offender-table">
+                        <thead>
+                            <tr>
+                                <th>Agent Name</th>
+                                <th>Order ID</th>
+                                <th>Ticket ID</th>
+                                <th>Comments</th>
+                                <th>Count</th>
+                            </tr>
+                        </thead>
+                        <tbody id="offender-undispatch">
+                        </tbody>
+                    </table>
+                    
+                    <div class="config-panel" style="margin-top:10px;">
+                        <h4>⚙️ Un-Dispatch Config</h4>
+                        <span class="hint">Track validation history · Set faulty thresholds · Auto-flag repeat offenders</span>
+                    </div>
+                </div>
+            </div>
+            
+            <div id="fraud-refund" class="fraud-tab" style="display:none;">
+                <div class="fraud-section">
+                    <h4>💰 Refund & Compensation Validation</h4>
+                    <div style="display:flex; justify-content:space-between; flex-wrap:wrap;">
+                        <div><span class="count blue">28</span> Total Validated</div>
+                        <div><span class="count red">6</span> Offenders Found</div>
+                        <div><span class="count green">22</span> Valid</div>
+                    </div>
+                    
+                    <h5 style="margin-top:12px; font-size:13px; color:#2c3e50;">Offender History</h5>
+                    <table class="offender-table">
+                        <thead>
+                            <tr>
+                                <th>Agent Name</th>
+                                <th>Order ID</th>
+                                <th>Ticket ID</th>
+                                <th>Comments</th>
+                                <th>Amount</th>
+                            </tr>
+                        </thead>
+                        <tbody id="offender-refund">
+                        </tbody>
+                    </table>
+                    
+                    <div class="config-panel" style="margin-top:10px;">
+                        <h4>⚙️ Refund Config</h4>
+                        <span class="hint">Track refund history · Set amount thresholds · Flag suspicious patterns</span>
                     </div>
                 </div>
             </div>
         </div>
         
+        <!-- ===== CARD 5: Leadership Summary ===== -->
         <div class="card col-span-12">
             <div class="card-title">
                 🏆 Leadership Summary
                 <span class="badge">Executive View</span>
             </div>
-            <div class="chart-row">
+            <div class="chart-row-2">
                 <div>
                     <h4 style="font-size:14px;color:#2c3e50;margin-bottom:10px;">Department Compliance Scorecards</h4>
                     <canvas id="scorecardChart"></canvas>
@@ -448,98 +686,143 @@
     </div>
 
     <script>
+        // ============================================================
+        // 1. DATA
+        // ============================================================
         const dashboardData = {
             timestamp: new Date().toISOString(),
             compliance: [
-                { project: 'Runaki', team: 'Contact Center', report: 'Daily Call Log', due: '2026-07-15', status: 'Submitted' },
-                { project: 'Runaki', team: 'Billing', report: 'Monthly Revenue', due: '2026-07-12', status: 'Submitted' },
-                { project: 'Runaki', team: 'Field Ops', report: 'Meter Readings', due: '2026-07-10', status: 'Pending' },
-                { project: 'Leaflet', team: 'KYC Team', report: 'Customer Verification', due: '2026-07-14', status: 'Submitted' },
-                { project: 'Leaflet', team: 'Compliance', report: 'AML Check', due: '2026-07-08', status: 'Missed' },
-                { project: 'Leaflet', team: 'Data Quality', report: 'Doc Validation', due: '2026-07-16', status: 'Pending' },
-                { project: 'Runaki', team: 'Compliance', report: 'Regulatory Filing', due: '2026-07-18', status: 'Pending' },
-                { project: 'Runaki', team: 'HR', report: 'Staff Training', due: '2026-07-05', status: 'Submitted' },
+                { project: 'A', department: 'Dispatch', report: 'RSAT / QA', owner: 'Manager / Asst. Manager', due: '7/15/2026 12:00', channel: 'Whatsapp', status: 'Submitted' },
+                { project: 'B', department: 'SSC', report: 'CSAT / QA', owner: 'Manager / Asst. Manager', due: '7/15/2026 12:00', channel: 'Email', status: 'Pending' },
+                { project: 'C', department: 'HR', report: 'Salary / Staff', owner: 'Execut', due: '7/15/2026 12:00', channel: 'Whatsapp / Email', status: 'Missed' },
+                { project: 'D', department: 'RTM', report: 'KPI Stats', owner: 'Execut', due: '7/15/2026 12:00', channel: 'Email', status: 'Missed' },
             ],
             ballDrops: [
-                { date: '2026-07-08', project: 'Leaflet', team: 'Compliance', reason: 'System outage', severity: 'High' },
-                { date: '2026-07-06', project: 'Runaki', team: 'Field Ops', reason: 'Human error', severity: 'Medium' },
-                { date: '2026-07-03', project: 'Leaflet', team: 'KYC Team', reason: 'Data delay', severity: 'Low' },
-                { date: '2026-07-01', project: 'Runaki', team: 'Billing', reason: 'Negligence', severity: 'Critical' },
+                { date: '2026-07-08', project: 'A', reason: 'System outage', count: 3 },
+                { date: '2026-07-07', project: 'B', reason: 'Human error', count: 2 },
+                { date: '2026-07-06', project: 'C', reason: 'Data delay', count: 1 },
+                { date: '2026-07-05', project: 'D', reason: 'Negligence', count: 4 },
+                { date: '2026-07-04', project: 'A', reason: 'System outage', count: 2 },
+                { date: '2026-07-03', project: 'B', reason: 'Human error', count: 3 },
+                { date: '2026-07-02', project: 'C', reason: 'Data delay', count: 1 },
             ],
             fraud: {
-                cases: [
-                    { type: 'Refund Validation', status: 'Flagged', amount: 5200 },
-                    { type: 'Refund Validation', status: 'Resolved', amount: 3100 },
-                    { type: 'Policy Abuse', status: 'Flagged', amount: 0 },
-                    { type: 'Agent Monitoring', status: 'Resolved', amount: 0 },
-                    { type: 'Refund Validation', status: 'Resolved', amount: 8700 },
-                ],
-                alerts: [
-                    { text: '🚨 Unusual refund pattern detected in Runaki', time: '2 min ago', severity: 'critical' },
-                    { text: '⚠️ KYC document mismatch for Leaflet client #1024', time: '15 min ago', severity: 'warning' },
-                    { text: '✅ Fraud case F-102 resolved successfully', time: '1 hour ago', severity: 'success' },
-                    { text: 'ℹ️ New compliance report due tomorrow for Runaki', time: '3 hours ago', severity: 'info' },
-                ]
+                personal: {
+                    total: 12,
+                    offenders: 5,
+                    clean: 7,
+                    data: [
+                        { agent: 'Ahmed Khan', order: 'ORD-1001', ticket: 'TKT-001', comments: 'Fake order placed', count: 3 },
+                        { agent: 'Bilal Ali', order: 'ORD-1002', ticket: 'TKT-002', comments: 'Self-order', count: 2 },
+                        { agent: 'Sara Ahmed', order: 'ORD-1003', ticket: 'TKT-003', comments: 'Family member order', count: 1 },
+                        { agent: 'Usman Raza', order: 'ORD-1004', ticket: 'TKT-004', comments: 'Duplicate order', count: 4 },
+                        { agent: 'Fatima Noor', order: 'ORD-1005', ticket: 'TKT-005', comments: 'Suspicious pattern', count: 2 },
+                    ]
+                },
+                undispatch: {
+                    total: 45,
+                    faulty: 8,
+                    valid: 37,
+                    data: [
+                        { agent: 'Ahmed Khan', order: 'ORD-2001', ticket: 'TKT-101', comments: 'Manual override without approval', count: 2 },
+                        { agent: 'Bilal Ali', order: 'ORD-2002', ticket: 'TKT-102', comments: 'Invalid dispatch', count: 1 },
+                        { agent: 'Usman Raza', order: 'ORD-2003', ticket: 'TKT-103', comments: 'System bypass', count: 3 },
+                        { agent: 'Sara Ahmed', order: 'ORD-2004', ticket: 'TKT-104', comments: 'Unauthorized dispatch', count: 1 },
+                    ]
+                },
+                refund: {
+                    total: 28,
+                    offenders: 6,
+                    valid: 22,
+                    data: [
+                        { agent: 'Ahmed Khan', order: 'ORD-3001', ticket: 'TKT-201', comments: 'Fake refund', amount: '$250' },
+                        { agent: 'Fatima Noor', order: 'ORD-3002', ticket: 'TKT-202', comments: 'Duplicate refund', amount: '$150' },
+                        { agent: 'Bilal Ali', order: 'ORD-3003', ticket: 'TKT-203', comments: 'Unauthorized compensation', amount: '$450' },
+                        { agent: 'Usman Raza', order: 'ORD-3004', ticket: 'TKT-204', comments: 'Suspicious refund pattern', amount: '$300' },
+                    ]
+                }
             },
             leadership: {
                 departments: [
-                    { name: 'Runaki - Contact Center', compliance: 95, risk: 'Low' },
-                    { name: 'Runaki - Billing', compliance: 88, risk: 'Medium' },
-                    { name: 'Runaki - Field Ops', compliance: 72, risk: 'High' },
-                    { name: 'Leaflet - KYC', compliance: 90, risk: 'Medium' },
-                    { name: 'Leaflet - Compliance', compliance: 65, risk: 'High' },
-                    { name: 'Leaflet - Data Quality', compliance: 82, risk: 'Low' },
+                    { name: 'Dispatch', compliance: 75, risk: 'Medium' },
+                    { name: 'SSC', compliance: 85, risk: 'Low' },
+                    { name: 'HR', compliance: 60, risk: 'High' },
+                    { name: 'RTM', compliance: 55, risk: 'High' },
                 ]
             }
         };
 
+        // ============================================================
+        // 2. UPDATE TIME
+        // ============================================================
         function updateTime() {
             document.getElementById('current-time').textContent = new Date().toLocaleString();
         }
         setInterval(updateTime, 1000);
         updateTime();
 
+        // ============================================================
+        // 3. RENDER COMPLIANCE TABLE
+        // ============================================================
         function renderCompliance() {
             const tbody = document.getElementById('compliance-body');
             tbody.innerHTML = dashboardData.compliance.map(row => `
                 <tr>
                     <td><strong>${row.project}</strong></td>
-                    <td>${row.team}</td>
+                    <td>${row.department}</td>
                     <td>${row.report}</td>
+                    <td>${row.owner}</td>
                     <td>${row.due}</td>
+                    <td><span class="channel-badge">${row.channel}</span></td>
                     <td><span class="status-badge status-${row.status.toLowerCase()}">● ${row.status}</span></td>
                 </tr>
             `).join('');
         }
 
-        function renderBallDrops() {
-            const container = document.getElementById('ball-drop-timeline');
-            container.innerHTML = dashboardData.ballDrops.map(bd => `
-                <div style="display:flex;justify-content:space-between;padding:10px 15px;border-bottom:1px solid #f1f3f5;align-items:center;">
-                    <div>
-                        <strong>${bd.project}</strong> - ${bd.team}
-                        <div style="font-size:13px;color:#7f8c8d;">${bd.reason}</div>
-                    </div>
-                    <div style="text-align:right;">
-                        <span style="font-size:12px;color:#7f8c8d;">${bd.date}</span>
-                        <span class="status-badge status-${bd.severity === 'Critical' ? 'missed' : bd.severity === 'High' ? 'pending' : 'submitted'}">
-                            ${bd.severity}
-                        </span>
-                    </div>
-                </div>
+        // ============================================================
+        // 4. RENDER OFFENDERS
+        // ============================================================
+        function renderOffenders() {
+            // Personal Orders
+            const personalBody = document.getElementById('offender-personal');
+            personalBody.innerHTML = dashboardData.fraud.personal.data.map(row => `
+                <tr>
+                    <td><strong>${row.agent}</strong></td>
+                    <td>${row.order}</td>
+                    <td>${row.ticket}</td>
+                    <td>${row.comments}</td>
+                    <td class="high">${row.count}x</td>
+                </tr>
+            `).join('');
+
+            // Un-Dispatch
+            const undispatchBody = document.getElementById('offender-undispatch');
+            undispatchBody.innerHTML = dashboardData.fraud.undispatch.data.map(row => `
+                <tr>
+                    <td><strong>${row.agent}</strong></td>
+                    <td>${row.order}</td>
+                    <td>${row.ticket}</td>
+                    <td>${row.comments}</td>
+                    <td class="high">${row.count}x</td>
+                </tr>
+            `).join('');
+
+            // Refund
+            const refundBody = document.getElementById('offender-refund');
+            refundBody.innerHTML = dashboardData.fraud.refund.data.map(row => `
+                <tr>
+                    <td><strong>${row.agent}</strong></td>
+                    <td>${row.order}</td>
+                    <td>${row.ticket}</td>
+                    <td>${row.comments}</td>
+                    <td class="high">${row.amount}</td>
+                </tr>
             `).join('');
         }
 
-        function renderAlerts() {
-            const container = document.getElementById('alert-feed');
-            container.innerHTML = dashboardData.fraud.alerts.map(alert => `
-                <div class="alert-item ${alert.severity}">
-                    <span>${alert.text}</span>
-                    <span class="time">${alert.time}</span>
-                </div>
-            `).join('');
-        }
-
+        // ============================================================
+        // 5. RENDER HEATMAP
+        // ============================================================
         function renderHeatmap() {
             const container = document.getElementById('heatmap-container');
             container.innerHTML = dashboardData.leadership.departments.map(dept => `
@@ -551,9 +834,26 @@
             `).join('');
         }
 
-        let statusChart, fraudChart, scorecardChart;
+        // ============================================================
+        // 6. FRAUD TAB SWITCHING
+        // ============================================================
+        function switchFraudTab(tab) {
+            // Hide all tabs
+            document.querySelectorAll('.fraud-tab').forEach(el => el.style.display = 'none');
+            document.querySelectorAll('.tab-btn').forEach(el => el.classList.remove('active'));
+            
+            // Show selected tab
+            document.getElementById(`fraud-${tab}`).style.display = 'block';
+            document.querySelector(`.tab-btn[onclick="switchFraudTab('${tab}')"]`).classList.add('active');
+        }
+
+        // ============================================================
+        // 7. CHARTS
+        // ============================================================
+        let statusChart, ballDropChart, scorecardChart;
 
         function initCharts() {
+            // Status Chart (Doughnut)
             const ctx1 = document.getElementById('statusChart').getContext('2d');
             const statusCounts = {
                 Submitted: dashboardData.compliance.filter(c => c.status === 'Submitted').length,
@@ -578,29 +878,33 @@
                 }
             });
 
-            const ctx2 = document.getElementById('fraudChart').getContext('2d');
-            const fraudCounts = {
-                Flagged: dashboardData.fraud.cases.filter(c => c.status === 'Flagged').length,
-                Resolved: dashboardData.fraud.cases.filter(c => c.status === 'Resolved').length,
-            };
+            // Ball Drop Bar Chart
+            const ctx2 = document.getElementById('ballDropChart').getContext('2d');
+            const dates = dashboardData.ballDrops.map(d => d.date);
+            const counts = dashboardData.ballDrops.map(d => d.count);
             
-            fraudChart = new Chart(ctx2, {
-                type: 'pie',
+            ballDropChart = new Chart(ctx2, {
+                type: 'bar',
                 data: {
-                    labels: ['🚩 Flagged', '✅ Resolved'],
+                    labels: dates,
                     datasets: [{
-                        data: [fraudCounts.Flagged, fraudCounts.Resolved],
-                        backgroundColor: ['#e74c3c', '#2ecc71'],
-                        borderWidth: 0
+                        label: 'Ball Drops',
+                        data: counts,
+                        backgroundColor: ['#e74c3c', '#f39c12', '#f1c40f', '#e74c3c', '#f39c12', '#f1c40f', '#e74c3c'],
+                        borderRadius: 5
                     }]
                 },
                 options: {
                     responsive: true,
                     maintainAspectRatio: false,
-                    plugins: { legend: { position: 'bottom' } }
+                    plugins: { legend: { display: false } },
+                    scales: {
+                        y: { beginAtZero: true, ticks: { stepSize: 1 } }
+                    }
                 }
             });
 
+            // Scorecard Chart (Bar)
             const ctx3 = document.getElementById('scorecardChart').getContext('2d');
             scorecardChart = new Chart(ctx3, {
                 type: 'bar',
@@ -610,7 +914,7 @@
                         label: 'Compliance %',
                         data: dashboardData.leadership.departments.map(d => d.compliance),
                         backgroundColor: dashboardData.leadership.departments.map(d => 
-                            d.compliance >= 90 ? '#2ecc71' : d.compliance >= 75 ? '#f1c40f' : '#e74c3c'
+                            d.compliance >= 80 ? '#2ecc71' : d.compliance >= 60 ? '#f1c40f' : '#e74c3c'
                         ),
                         borderRadius: 5
                     }]
@@ -624,31 +928,46 @@
             });
         }
 
+        // ============================================================
+        // 8. REFRESH
+        // ============================================================
         function refreshDashboard() {
             document.getElementById('last-update').textContent = 'Refreshing...';
             setTimeout(() => {
                 document.getElementById('last-update').textContent = new Date().toLocaleString();
                 renderCompliance();
-                renderBallDrops();
-                renderAlerts();
+                renderOffenders();
                 renderHeatmap();
                 if (statusChart) statusChart.destroy();
-                if (fraudChart) fraudChart.destroy();
+                if (ballDropChart) ballDropChart.destroy();
                 if (scorecardChart) scorecardChart.destroy();
                 initCharts();
             }, 500);
         }
 
+        // ============================================================
+        // 9. INIT
+        // ============================================================
         document.addEventListener('DOMContentLoaded', function() {
             renderCompliance();
-            renderBallDrops();
-            renderAlerts();
+            renderOffenders();
             renderHeatmap();
             initCharts();
             document.getElementById('last-update').textContent = new Date().toLocaleString();
+            
+            // Update summary stats
+            document.getElementById('total-projects').textContent = dashboardData.compliance.length;
+            document.getElementById('pending-reports').textContent = dashboardData.compliance.filter(c => c.status === 'Pending').length;
+            document.getElementById('missed-reports').textContent = dashboardData.compliance.filter(c => c.status === 'Missed').length;
+            const submitted = dashboardData.compliance.filter(c => c.status === 'Submitted').length;
+            const total = dashboardData.compliance.length;
+            document.getElementById('compliance-rate').textContent = Math.round((submitted/total)*100) + '%';
+            document.getElementById('total-offenders').textContent = dashboardData.fraud.personal.offenders + dashboardData.fraud.undispatch.faulty + dashboardData.fraud.refund.offenders;
         });
 
+        // Make functions global
         window.refreshDashboard = refreshDashboard;
+        window.switchFraudTab = switchFraudTab;
     </script>
 
 </body>
