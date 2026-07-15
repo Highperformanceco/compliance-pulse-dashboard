@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Compliance Pulse - Runaki & Leaflet Dashboard</title>
-    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
     <style>
         * {
             margin: 0;
@@ -94,6 +94,7 @@
         .stat-item.red .number { color: #e74c3c; }
         .stat-item.blue .number { color: #3498db; }
         .stat-item.purple .number { color: #9b59b6; }
+        .stat-item.orange .number { color: #e67e22; }
 
         .dashboard-grid {
             display: grid;
@@ -107,6 +108,11 @@
             padding: 20px;
             box-shadow: 0 2px 15px rgba(0,0,0,0.06);
             grid-column: span 12;
+            transition: all 0.3s;
+        }
+        
+        .card:hover {
+            box-shadow: 0 4px 25px rgba(0,0,0,0.1);
         }
         
         .card-title {
@@ -204,6 +210,7 @@
         .chart-container {
             position: relative;
             height: 250px;
+            width: 100%;
         }
         
         .chart-row {
@@ -264,31 +271,40 @@
         .offender-table .medium { color: #f39c12; font-weight: 600; }
         .offender-table .low { color: #2ecc71; font-weight: 600; }
 
-        .alert-feed {
-            max-height: 200px;
+        .scrollable-table {
+            max-height: 300px;
             overflow-y: auto;
         }
-        
-        .alert-item {
-            padding: 10px 15px;
-            border-left: 4px solid;
-            margin-bottom: 6px;
-            background: #f8f9fa;
-            border-radius: 6px;
+
+        .tab-buttons {
             display: flex;
-            justify-content: space-between;
-            align-items: center;
-            font-size: 13px;
+            gap: 8px;
+            flex-wrap: wrap;
+            margin-bottom: 10px;
         }
         
-        .alert-item.critical { border-color: #e74c3c; }
-        .alert-item.warning { border-color: #f1c40f; }
-        .alert-item.info { border-color: #3498db; }
-        .alert-item.success { border-color: #2ecc71; }
+        .tab-btn {
+            padding: 6px 16px;
+            border: 1px solid #dee2e6;
+            border-radius: 20px;
+            background: white;
+            cursor: pointer;
+            font-size: 12px;
+            transition: all 0.3s;
+        }
         
-        .alert-item .time {
-            font-size: 11px;
-            color: #7f8c8d;
+        .tab-btn.active {
+            background: #1a1a2e;
+            color: white;
+            border-color: #1a1a2e;
+        }
+        
+        .tab-btn:hover {
+            background: #e9ecef;
+        }
+        
+        .tab-btn.active:hover {
+            background: #2c3e50;
         }
 
         .heatmap-grid {
@@ -315,45 +331,74 @@
             margin-top: 5px;
         }
         
+        .risk-critical { background: #c0392b; }
         .risk-high { background: #e74c3c; }
         .risk-medium { background: #f39c12; }
         .risk-low { background: #2ecc71; }
+        .risk-very-low { background: #27ae60; }
 
-        @media (min-width: 768px) {
-            .card.col-span-6 { grid-column: span 6; }
-            .card.col-span-4 { grid-column: span 4; }
-            .card.col-span-8 { grid-column: span 8; }
-            .card.col-span-3 { grid-column: span 3; }
+        .risk-matrix {
+            display: grid;
+            grid-template-columns: auto repeat(5, 1fr);
+            gap: 4px;
+            font-size: 12px;
+            margin-top: 10px;
         }
         
-        @media (max-width: 767px) {
-            .header {
-                flex-direction: column;
-                align-items: flex-start;
-                gap: 15px;
-            }
-            
-            .header-right {
-                text-align: left;
-                width: 100%;
-            }
-            
-            .summary-stats {
-                gap: 15px;
-            }
-            
-            .stat-item {
-                min-width: 70px;
-                padding: 8px 15px;
-            }
-            
-            .stat-item .number {
-                font-size: 20px;
-            }
-            
-            .chart-row, .chart-row-2 {
-                grid-template-columns: 1fr;
-            }
+        .risk-matrix .cell {
+            padding: 8px;
+            text-align: center;
+            border-radius: 4px;
+            font-weight: 600;
+        }
+        
+        .risk-matrix .header-cell {
+            background: #2c3e50;
+            color: white;
+            padding: 8px;
+            text-align: center;
+            border-radius: 4px;
+            font-weight: 600;
+        }
+        
+        .risk-matrix .row-label {
+            background: #ecf0f1;
+            padding: 8px;
+            text-align: center;
+            border-radius: 4px;
+            font-weight: 600;
+        }
+
+        .risk-color-1 { background: #27ae60; color: white; }
+        .risk-color-2 { background: #2ecc71; color: white; }
+        .risk-color-3 { background: #f1c40f; color: #1a1a2e; }
+        .risk-color-4 { background: #e67e22; color: white; }
+        .risk-color-5 { background: #c0392b; color: white; }
+
+        .audit-ratio {
+            display: flex;
+            gap: 15px;
+            flex-wrap: wrap;
+            justify-content: center;
+            margin-top: 10px;
+        }
+        
+        .audit-item {
+            text-align: center;
+            padding: 10px 20px;
+            background: #f8f9fa;
+            border-radius: 10px;
+            min-width: 80px;
+        }
+        
+        .audit-item .value {
+            font-size: 20px;
+            font-weight: 700;
+        }
+        
+        .audit-item .label {
+            font-size: 11px;
+            color: #7f8c8d;
         }
 
         .refresh-btn {
@@ -392,58 +437,65 @@
             font-family: monospace;
         }
 
-        .scrollable-table {
-            max-height: 300px;
-            overflow-y: auto;
-        }
-
-        .tab-buttons {
-            display: flex;
-            gap: 8px;
-            flex-wrap: wrap;
-            margin-bottom: 10px;
+        .risk-summary {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+            gap: 15px;
+            margin: 15px 0;
         }
         
-        .tab-btn {
-            padding: 6px 16px;
-            border: 1px solid #dee2e6;
-            border-radius: 20px;
-            background: white;
-            cursor: pointer;
-            font-size: 12px;
-            transition: all 0.3s;
-        }
-        
-        .tab-btn.active {
-            background: #1a1a2e;
+        .risk-card {
+            padding: 15px;
+            border-radius: 10px;
+            text-align: center;
             color: white;
-            border-color: #1a1a2e;
         }
         
-        .tab-btn:hover {
-            background: #e9ecef;
+        .risk-card .number {
+            font-size: 28px;
+            font-weight: 700;
         }
         
-        .tab-btn.active:hover {
-            background: #2c3e50;
+        .risk-card .label {
+            font-size: 12px;
+            opacity: 0.9;
         }
 
-        .fraud-config-table {
-            width: 100%;
-            font-size: 12px;
-            border-collapse: collapse;
+        @media (min-width: 768px) {
+            .card.col-span-6 { grid-column: span 6; }
+            .card.col-span-4 { grid-column: span 4; }
+            .card.col-span-8 { grid-column: span 8; }
+            .card.col-span-3 { grid-column: span 3; }
         }
         
-        .fraud-config-table th {
-            text-align: left;
-            padding: 6px 8px;
-            background: #e9ecef;
-            font-weight: 600;
-        }
-        
-        .fraud-config-table td {
-            padding: 6px 8px;
-            border-bottom: 1px solid #dee2e6;
+        @media (max-width: 767px) {
+            .header {
+                flex-direction: column;
+                align-items: flex-start;
+                gap: 15px;
+            }
+            
+            .header-right {
+                text-align: left;
+                width: 100%;
+            }
+            
+            .summary-stats {
+                gap: 15px;
+            }
+            
+            .stat-item {
+                min-width: 70px;
+                padding: 8px 15px;
+            }
+            
+            .stat-item .number {
+                font-size: 20px;
+            }
+            
+            .chart-row, .chart-row-2 {
+                grid-template-columns: 1fr;
+            }
         }
     </style>
 </head>
@@ -457,24 +509,28 @@
             
             <div class="summary-stats">
                 <div class="stat-item blue">
-                    <span class="number" id="total-projects">4</span>
+                    <span class="number">4</span>
                     <span class="label">Active Projects</span>
                 </div>
                 <div class="stat-item green">
-                    <span class="number" id="compliance-rate">75%</span>
+                    <span class="number">75%</span>
                     <span class="label">Compliance Rate</span>
                 </div>
                 <div class="stat-item yellow">
-                    <span class="number" id="pending-reports">1</span>
+                    <span class="number">1</span>
                     <span class="label">Pending Reports</span>
                 </div>
                 <div class="stat-item red">
-                    <span class="number" id="missed-reports">2</span>
+                    <span class="number">2</span>
                     <span class="label">Missed Reports</span>
                 </div>
                 <div class="stat-item purple">
-                    <span class="number" id="total-offenders">5</span>
+                    <span class="number">5</span>
                     <span class="label">Total Offenders</span>
+                </div>
+                <div class="stat-item orange">
+                    <span class="number">17</span>
+                    <span class="label">Open Risks</span>
                 </div>
             </div>
         </div>
@@ -485,7 +541,7 @@
             </div>
             <div class="last-update">
                 Last updated: <span id="last-update">Just now</span>
-                <button class="refresh-btn" onclick="refreshDashboard()">⟳ Refresh</button>
+                <button class="refresh-btn" onclick="location.reload()">⟳ Refresh</button>
             </div>
         </div>
     </header>
@@ -513,6 +569,42 @@
                         </tr>
                     </thead>
                     <tbody id="compliance-body">
+                        <tr>
+                            <td><strong>A</strong></td>
+                            <td>Dispatch</td>
+                            <td>RSAT / QA</td>
+                            <td>Manager / Asst. Manager</td>
+                            <td>7/15/2026 12:00</td>
+                            <td><span class="channel-badge">Whatsapp</span></td>
+                            <td><span class="status-badge status-submitted">● Submitted</span></td>
+                        </tr>
+                        <tr>
+                            <td><strong>B</strong></td>
+                            <td>SSC</td>
+                            <td>CSAT / QA</td>
+                            <td>Manager / Asst. Manager</td>
+                            <td>7/15/2026 12:00</td>
+                            <td><span class="channel-badge">Email</span></td>
+                            <td><span class="status-badge status-pending">● Pending</span></td>
+                        </tr>
+                        <tr>
+                            <td><strong>C</strong></td>
+                            <td>HR</td>
+                            <td>Salary / Staff</td>
+                            <td>Execut</td>
+                            <td>7/15/2026 12:00</td>
+                            <td><span class="channel-badge">Whatsapp / Email</span></td>
+                            <td><span class="status-badge status-missed">● Missed</span></td>
+                        </tr>
+                        <tr>
+                            <td><strong>D</strong></td>
+                            <td>RTM</td>
+                            <td>KPI Stats</td>
+                            <td>Execut</td>
+                            <td>7/15/2026 12:00</td>
+                            <td><span class="channel-badge">Email</span></td>
+                            <td><span class="status-badge status-missed">● Missed</span></td>
+                        </tr>
                     </tbody>
                 </table>
             </div>
@@ -539,7 +631,7 @@
             </div>
         </div>
         
-        <!-- ===== CARD 3: Report Issues / Ball Drops (Bar Chart) ===== -->
+        <!-- ===== CARD 3: Report Issues / Ball Drops ===== -->
         <div class="card col-span-6">
             <div class="card-title">
                 📊 Report Issues / Ball Drops History
@@ -550,46 +642,42 @@
             </div>
         </div>
         
-        <!-- ===== CARD 4: Fraud Oversight - Three Sections ===== -->
+        <!-- ===== CARD 4: Fraud Oversight ===== -->
         <div class="card col-span-6">
             <div class="card-title">
                 🛡️ Fraud Oversight
                 <span class="badge">3 Sections</span>
             </div>
             
-            <!-- Tab Navigation -->
             <div class="tab-buttons">
                 <button class="tab-btn active" onclick="switchFraudTab('personal')">👤 Personal Orders</button>
                 <button class="tab-btn" onclick="switchFraudTab('undispatch')">🚚 Un-Dispatch</button>
                 <button class="tab-btn" onclick="switchFraudTab('refund')">💰 Refund/Compensation</button>
             </div>
             
-            <!-- Tab Content -->
             <div id="fraud-personal" class="fraud-tab">
                 <div class="fraud-section">
                     <h4>👤 Agent Personal Order Validation</h4>
                     <div style="display:flex; justify-content:space-between; flex-wrap:wrap;">
                         <div><span class="count blue">12</span> Total Validated</div>
                         <div><span class="count red">5</span> Offenders Found</div>
-                        <div><span class="count orange">7</span> Clean Agents</div>
+                        <div><span class="count green">7</span> Clean Agents</div>
                     </div>
                     
                     <h5 style="margin-top:12px; font-size:13px; color:#2c3e50;">Top Offenders</h5>
                     <table class="offender-table">
                         <thead>
-                            <tr>
-                                <th>Agent Name</th>
-                                <th>Order ID</th>
-                                <th>Ticket ID</th>
-                                <th>Comments</th>
-                                <th>Count</th>
-                            </tr>
+                            <tr><th>Agent Name</th><th>Order ID</th><th>Ticket ID</th><th>Comments</th><th>Count</th></tr>
                         </thead>
-                        <tbody id="offender-personal">
+                        <tbody>
+                            <tr><td><strong>Ahmed Khan</strong></td><td>ORD-1001</td><td>TKT-001</td><td>Fake order placed</td><td class="high">3x</td></tr>
+                            <tr><td><strong>Bilal Ali</strong></td><td>ORD-1002</td><td>TKT-002</td><td>Self-order</td><td class="high">2x</td></tr>
+                            <tr><td><strong>Sara Ahmed</strong></td><td>ORD-1003</td><td>TKT-003</td><td>Family member order</td><td class="medium">1x</td></tr>
+                            <tr><td><strong>Usman Raza</strong></td><td>ORD-1004</td><td>TKT-004</td><td>Duplicate order</td><td class="high">4x</td></tr>
+                            <tr><td><strong>Fatima Noor</strong></td><td>ORD-1005</td><td>TKT-005</td><td>Suspicious pattern</td><td class="medium">2x</td></tr>
                         </tbody>
                     </table>
                     
-                    <!-- Config Section -->
                     <div class="config-panel" style="margin-top:10px;">
                         <h4>⚙️ Agent Config</h4>
                         <span class="hint">Add/Remove agents · Track order history · Set alert thresholds</span>
@@ -609,15 +697,13 @@
                     <h5 style="margin-top:12px; font-size:13px; color:#2c3e50;">Faulty Agent History</h5>
                     <table class="offender-table">
                         <thead>
-                            <tr>
-                                <th>Agent Name</th>
-                                <th>Order ID</th>
-                                <th>Ticket ID</th>
-                                <th>Comments</th>
-                                <th>Count</th>
-                            </tr>
+                            <tr><th>Agent Name</th><th>Order ID</th><th>Ticket ID</th><th>Comments</th><th>Count</th></tr>
                         </thead>
-                        <tbody id="offender-undispatch">
+                        <tbody>
+                            <tr><td><strong>Ahmed Khan</strong></td><td>ORD-2001</td><td>TKT-101</td><td>Manual override without approval</td><td class="high">2x</td></tr>
+                            <tr><td><strong>Bilal Ali</strong></td><td>ORD-2002</td><td>TKT-102</td><td>Invalid dispatch</td><td class="medium">1x</td></tr>
+                            <tr><td><strong>Usman Raza</strong></td><td>ORD-2003</td><td>TKT-103</td><td>System bypass</td><td class="high">3x</td></tr>
+                            <tr><td><strong>Sara Ahmed</strong></td><td>ORD-2004</td><td>TKT-104</td><td>Unauthorized dispatch</td><td class="medium">1x</td></tr>
                         </tbody>
                     </table>
                     
@@ -640,15 +726,13 @@
                     <h5 style="margin-top:12px; font-size:13px; color:#2c3e50;">Offender History</h5>
                     <table class="offender-table">
                         <thead>
-                            <tr>
-                                <th>Agent Name</th>
-                                <th>Order ID</th>
-                                <th>Ticket ID</th>
-                                <th>Comments</th>
-                                <th>Amount</th>
-                            </tr>
+                            <tr><th>Agent Name</th><th>Order ID</th><th>Ticket ID</th><th>Comments</th><th>Amount</th></tr>
                         </thead>
-                        <tbody id="offender-refund">
+                        <tbody>
+                            <tr><td><strong>Ahmed Khan</strong></td><td>ORD-3001</td><td>TKT-201</td><td>Fake refund</td><td class="high">$250</td></tr>
+                            <tr><td><strong>Fatima Noor</strong></td><td>ORD-3002</td><td>TKT-202</td><td>Duplicate refund</td><td class="medium">$150</td></tr>
+                            <tr><td><strong>Bilal Ali</strong></td><td>ORD-3003</td><td>TKT-203</td><td>Unauthorized compensation</td><td class="high">$450</td></tr>
+                            <tr><td><strong>Usman Raza</strong></td><td>ORD-3004</td><td>TKT-204</td><td>Suspicious refund pattern</td><td class="high">$300</td></tr>
                         </tbody>
                     </table>
                     
@@ -660,7 +744,127 @@
             </div>
         </div>
         
-        <!-- ===== CARD 5: Leadership Summary ===== -->
+        <!-- ===== CARD 5: Risk Management (New) ===== -->
+        <div class="card col-span-12">
+            <div class="card-title">
+                ⚠️ Risk Management Dashboard
+                <span class="badge">Executive View</span>
+            </div>
+            
+            <!-- Risk Summary Cards -->
+            <div class="risk-summary">
+                <div class="risk-card" style="background: linear-gradient(135deg, #c0392b, #e74c3c);">
+                    <div class="number">17</div>
+                    <div class="label">Failed / Open Risks</div>
+                </div>
+                <div class="risk-card" style="background: linear-gradient(135deg, #e67e22, #f39c12);">
+                    <div class="number">25</div>
+                    <div class="label">Manual Check Required</div>
+                </div>
+                <div class="risk-card" style="background: linear-gradient(135deg, #2980b9, #3498db);">
+                    <div class="number">37</div>
+                    <div class="label">Planned Actions</div>
+                </div>
+                <div class="risk-card" style="background: linear-gradient(135deg, #27ae60, #2ecc71);">
+                    <div class="number">20</div>
+                    <div class="label">TBD / Under Review</div>
+                </div>
+            </div>
+            
+            <div class="chart-row-2">
+                <div>
+                    <h4 style="font-size:14px;color:#2c3e50;margin-bottom:10px;">Top 5 Risks</h4>
+                    <div class="chart-container" style="height:200px;">
+                        <canvas id="topRisksChart"></canvas>
+                    </div>
+                </div>
+                <div>
+                    <h4 style="font-size:14px;color:#2c3e50;margin-bottom:10px;">Compliance Risk Trend</h4>
+                    <div class="chart-container" style="height:200px;">
+                        <canvas id="complianceRiskChart"></canvas>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="chart-row-2" style="margin-top:15px;">
+                <div>
+                    <h4 style="font-size:14px;color:#2c3e50;margin-bottom:10px;">Audit Check Ratio</h4>
+                    <div class="chart-container" style="height:200px;">
+                        <canvas id="auditChart"></canvas>
+                    </div>
+                </div>
+                <div>
+                    <h4 style="font-size:14px;color:#2c3e50;margin-bottom:10px;">Risk Action Plan</h4>
+                    <div class="chart-container" style="height:200px;">
+                        <canvas id="actionPlanChart"></canvas>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Risk Matrix -->
+            <div style="margin-top:15px;">
+                <h4 style="font-size:14px;color:#2c3e50;margin-bottom:10px;">Risk Heat Map Matrix</h4>
+                <div style="overflow-x:auto;">
+                    <div class="risk-matrix" style="grid-template-columns: auto repeat(5, 1fr); min-width:500px;">
+                        <div class="header-cell">Risk Rating</div>
+                        <div class="header-cell">Severe</div>
+                        <div class="header-cell">Major</div>
+                        <div class="header-cell">Moderate</div>
+                        <div class="header-cell">Minor</div>
+                        <div class="header-cell">Insignificant</div>
+                        
+                        <div class="row-label">Almost Certain (5)</div>
+                        <div class="cell risk-color-5">5</div>
+                        <div class="cell risk-color-5">5</div>
+                        <div class="cell risk-color-4">4</div>
+                        <div class="cell risk-color-3">3</div>
+                        <div class="cell risk-color-2">2</div>
+                        
+                        <div class="row-label">Likely (4)</div>
+                        <div class="cell risk-color-5">4</div>
+                        <div class="cell risk-color-4">4</div>
+                        <div class="cell risk-color-3">3</div>
+                        <div class="cell risk-color-2">2</div>
+                        <div class="cell risk-color-1">1</div>
+                        
+                        <div class="row-label">Moderate (3)</div>
+                        <div class="cell risk-color-4">3</div>
+                        <div class="cell risk-color-3">3</div>
+                        <div class="cell risk-color-2">2</div>
+                        <div class="cell risk-color-1">1</div>
+                        <div class="cell risk-color-1">1</div>
+                        
+                        <div class="row-label">Unlikely (2)</div>
+                        <div class="cell risk-color-3">2</div>
+                        <div class="cell risk-color-2">2</div>
+                        <div class="cell risk-color-1">1</div>
+                        <div class="cell risk-color-1">1</div>
+                        <div class="cell risk-color-1">1</div>
+                        
+                        <div class="row-label">Rare (1)</div>
+                        <div class="cell risk-color-2">1</div>
+                        <div class="cell risk-color-1">1</div>
+                        <div class="cell risk-color-1">1</div>
+                        <div class="cell risk-color-1">1</div>
+                        <div class="cell risk-color-1">1</div>
+                    </div>
+                </div>
+                <div style="display:flex; gap:15px; margin-top:10px; flex-wrap:wrap; justify-content:center; font-size:12px;">
+                    <span><span style="display:inline-block; width:15px; height:15px; background:#c0392b; border-radius:3px;"></span> Critical</span>
+                    <span><span style="display:inline-block; width:15px; height:15px; background:#e67e22; border-radius:3px;"></span> High</span>
+                    <span><span style="display:inline-block; width:15px; height:15px; background:#f1c40f; border-radius:3px;"></span> Medium</span>
+                    <span><span style="display:inline-block; width:15px; height:15px; background:#2ecc71; border-radius:3px;"></span> Low</span>
+                    <span><span style="display:inline-block; width:15px; height:15px; background:#27ae60; border-radius:3px;"></span> Very Low</span>
+                </div>
+            </div>
+            
+            <div class="config-panel">
+                <h4>🔧 Risk Management Controls</h4>
+                <span class="hint">Adjust risk thresholds · Add new risk categories · Configure audit ratios · Export risk reports</span>
+            </div>
+        </div>
+        
+        <!-- ===== CARD 6: Leadership Summary ===== -->
         <div class="card col-span-12">
             <div class="card-title">
                 🏆 Leadership Summary
@@ -669,11 +873,33 @@
             <div class="chart-row-2">
                 <div>
                     <h4 style="font-size:14px;color:#2c3e50;margin-bottom:10px;">Department Compliance Scorecards</h4>
-                    <canvas id="scorecardChart"></canvas>
+                    <div class="chart-container" style="height:200px;">
+                        <canvas id="scorecardChart"></canvas>
+                    </div>
                 </div>
                 <div>
-                    <h4 style="font-size:14px;color:#2c3e50;margin-bottom:10px;">Risk Heatmap</h4>
+                    <h4 style="font-size:14px;color:#2c3e50;margin-bottom:10px;">Risk Heatmap by Department</h4>
                     <div class="heatmap-grid" id="heatmap-container">
+                        <div class="heatmap-item risk-medium">
+                            <div class="dept">Dispatch</div>
+                            <div class="score">75%</div>
+                            <div style="font-size:11px;opacity:0.8;">Risk: Medium</div>
+                        </div>
+                        <div class="heatmap-item risk-low">
+                            <div class="dept">SSC</div>
+                            <div class="score">85%</div>
+                            <div style="font-size:11px;opacity:0.8;">Risk: Low</div>
+                        </div>
+                        <div class="heatmap-item risk-high">
+                            <div class="dept">HR</div>
+                            <div class="score">60%</div>
+                            <div style="font-size:11px;opacity:0.8;">Risk: High</div>
+                        </div>
+                        <div class="heatmap-item risk-critical">
+                            <div class="dept">RTM</div>
+                            <div class="score">55%</div>
+                            <div style="font-size:11px;opacity:0.8;">Risk: Critical</div>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -687,73 +913,7 @@
 
     <script>
         // ============================================================
-        // 1. DATA
-        // ============================================================
-        const dashboardData = {
-            timestamp: new Date().toISOString(),
-            compliance: [
-                { project: 'A', department: 'Dispatch', report: 'RSAT / QA', owner: 'Manager / Asst. Manager', due: '7/15/2026 12:00', channel: 'Whatsapp', status: 'Submitted' },
-                { project: 'B', department: 'SSC', report: 'CSAT / QA', owner: 'Manager / Asst. Manager', due: '7/15/2026 12:00', channel: 'Email', status: 'Pending' },
-                { project: 'C', department: 'HR', report: 'Salary / Staff', owner: 'Execut', due: '7/15/2026 12:00', channel: 'Whatsapp / Email', status: 'Missed' },
-                { project: 'D', department: 'RTM', report: 'KPI Stats', owner: 'Execut', due: '7/15/2026 12:00', channel: 'Email', status: 'Missed' },
-            ],
-            ballDrops: [
-                { date: '2026-07-08', project: 'A', reason: 'System outage', count: 3 },
-                { date: '2026-07-07', project: 'B', reason: 'Human error', count: 2 },
-                { date: '2026-07-06', project: 'C', reason: 'Data delay', count: 1 },
-                { date: '2026-07-05', project: 'D', reason: 'Negligence', count: 4 },
-                { date: '2026-07-04', project: 'A', reason: 'System outage', count: 2 },
-                { date: '2026-07-03', project: 'B', reason: 'Human error', count: 3 },
-                { date: '2026-07-02', project: 'C', reason: 'Data delay', count: 1 },
-            ],
-            fraud: {
-                personal: {
-                    total: 12,
-                    offenders: 5,
-                    clean: 7,
-                    data: [
-                        { agent: 'Ahmed Khan', order: 'ORD-1001', ticket: 'TKT-001', comments: 'Fake order placed', count: 3 },
-                        { agent: 'Bilal Ali', order: 'ORD-1002', ticket: 'TKT-002', comments: 'Self-order', count: 2 },
-                        { agent: 'Sara Ahmed', order: 'ORD-1003', ticket: 'TKT-003', comments: 'Family member order', count: 1 },
-                        { agent: 'Usman Raza', order: 'ORD-1004', ticket: 'TKT-004', comments: 'Duplicate order', count: 4 },
-                        { agent: 'Fatima Noor', order: 'ORD-1005', ticket: 'TKT-005', comments: 'Suspicious pattern', count: 2 },
-                    ]
-                },
-                undispatch: {
-                    total: 45,
-                    faulty: 8,
-                    valid: 37,
-                    data: [
-                        { agent: 'Ahmed Khan', order: 'ORD-2001', ticket: 'TKT-101', comments: 'Manual override without approval', count: 2 },
-                        { agent: 'Bilal Ali', order: 'ORD-2002', ticket: 'TKT-102', comments: 'Invalid dispatch', count: 1 },
-                        { agent: 'Usman Raza', order: 'ORD-2003', ticket: 'TKT-103', comments: 'System bypass', count: 3 },
-                        { agent: 'Sara Ahmed', order: 'ORD-2004', ticket: 'TKT-104', comments: 'Unauthorized dispatch', count: 1 },
-                    ]
-                },
-                refund: {
-                    total: 28,
-                    offenders: 6,
-                    valid: 22,
-                    data: [
-                        { agent: 'Ahmed Khan', order: 'ORD-3001', ticket: 'TKT-201', comments: 'Fake refund', amount: '$250' },
-                        { agent: 'Fatima Noor', order: 'ORD-3002', ticket: 'TKT-202', comments: 'Duplicate refund', amount: '$150' },
-                        { agent: 'Bilal Ali', order: 'ORD-3003', ticket: 'TKT-203', comments: 'Unauthorized compensation', amount: '$450' },
-                        { agent: 'Usman Raza', order: 'ORD-3004', ticket: 'TKT-204', comments: 'Suspicious refund pattern', amount: '$300' },
-                    ]
-                }
-            },
-            leadership: {
-                departments: [
-                    { name: 'Dispatch', compliance: 75, risk: 'Medium' },
-                    { name: 'SSC', compliance: 85, risk: 'Low' },
-                    { name: 'HR', compliance: 60, risk: 'High' },
-                    { name: 'RTM', compliance: 55, risk: 'High' },
-                ]
-            }
-        };
-
-        // ============================================================
-        // 2. UPDATE TIME
+        // 1. UPDATE TIME
         // ============================================================
         function updateTime() {
             document.getElementById('current-time').textContent = new Date().toLocaleString();
@@ -762,211 +922,208 @@
         updateTime();
 
         // ============================================================
-        // 3. RENDER COMPLIANCE TABLE
-        // ============================================================
-        function renderCompliance() {
-            const tbody = document.getElementById('compliance-body');
-            tbody.innerHTML = dashboardData.compliance.map(row => `
-                <tr>
-                    <td><strong>${row.project}</strong></td>
-                    <td>${row.department}</td>
-                    <td>${row.report}</td>
-                    <td>${row.owner}</td>
-                    <td>${row.due}</td>
-                    <td><span class="channel-badge">${row.channel}</span></td>
-                    <td><span class="status-badge status-${row.status.toLowerCase()}">● ${row.status}</span></td>
-                </tr>
-            `).join('');
-        }
-
-        // ============================================================
-        // 4. RENDER OFFENDERS
-        // ============================================================
-        function renderOffenders() {
-            // Personal Orders
-            const personalBody = document.getElementById('offender-personal');
-            personalBody.innerHTML = dashboardData.fraud.personal.data.map(row => `
-                <tr>
-                    <td><strong>${row.agent}</strong></td>
-                    <td>${row.order}</td>
-                    <td>${row.ticket}</td>
-                    <td>${row.comments}</td>
-                    <td class="high">${row.count}x</td>
-                </tr>
-            `).join('');
-
-            // Un-Dispatch
-            const undispatchBody = document.getElementById('offender-undispatch');
-            undispatchBody.innerHTML = dashboardData.fraud.undispatch.data.map(row => `
-                <tr>
-                    <td><strong>${row.agent}</strong></td>
-                    <td>${row.order}</td>
-                    <td>${row.ticket}</td>
-                    <td>${row.comments}</td>
-                    <td class="high">${row.count}x</td>
-                </tr>
-            `).join('');
-
-            // Refund
-            const refundBody = document.getElementById('offender-refund');
-            refundBody.innerHTML = dashboardData.fraud.refund.data.map(row => `
-                <tr>
-                    <td><strong>${row.agent}</strong></td>
-                    <td>${row.order}</td>
-                    <td>${row.ticket}</td>
-                    <td>${row.comments}</td>
-                    <td class="high">${row.amount}</td>
-                </tr>
-            `).join('');
-        }
-
-        // ============================================================
-        // 5. RENDER HEATMAP
-        // ============================================================
-        function renderHeatmap() {
-            const container = document.getElementById('heatmap-container');
-            container.innerHTML = dashboardData.leadership.departments.map(dept => `
-                <div class="heatmap-item risk-${dept.risk.toLowerCase()}">
-                    <div class="dept">${dept.name}</div>
-                    <div class="score">${dept.compliance}%</div>
-                    <div style="font-size:11px;opacity:0.8;">Risk: ${dept.risk}</div>
-                </div>
-            `).join('');
-        }
-
-        // ============================================================
-        // 6. FRAUD TAB SWITCHING
+        // 2. FRAUD TAB SWITCHING
         // ============================================================
         function switchFraudTab(tab) {
-            // Hide all tabs
             document.querySelectorAll('.fraud-tab').forEach(el => el.style.display = 'none');
             document.querySelectorAll('.tab-btn').forEach(el => el.classList.remove('active'));
-            
-            // Show selected tab
             document.getElementById(`fraud-${tab}`).style.display = 'block';
             document.querySelector(`.tab-btn[onclick="switchFraudTab('${tab}')"]`).classList.add('active');
         }
 
         // ============================================================
-        // 7. CHARTS
+        // 3. CHARTS - Using setTimeout to ensure DOM is ready
         // ============================================================
-        let statusChart, ballDropChart, scorecardChart;
+        let charts = {};
 
         function initCharts() {
             // Status Chart (Doughnut)
-            const ctx1 = document.getElementById('statusChart').getContext('2d');
-            const statusCounts = {
-                Submitted: dashboardData.compliance.filter(c => c.status === 'Submitted').length,
-                Pending: dashboardData.compliance.filter(c => c.status === 'Pending').length,
-                Missed: dashboardData.compliance.filter(c => c.status === 'Missed').length,
-            };
-            
-            statusChart = new Chart(ctx1, {
-                type: 'doughnut',
-                data: {
-                    labels: ['✅ Submitted', '⏳ Pending', '❌ Missed'],
-                    datasets: [{
-                        data: [statusCounts.Submitted, statusCounts.Pending, statusCounts.Missed],
-                        backgroundColor: ['#2ecc71', '#f1c40f', '#e74c3c'],
-                        borderWidth: 0
-                    }]
-                },
-                options: {
-                    responsive: true,
-                    maintainAspectRatio: false,
-                    plugins: { legend: { position: 'bottom' } }
-                }
-            });
+            const ctx1 = document.getElementById('statusChart');
+            if (ctx1) {
+                charts.status = new Chart(ctx1, {
+                    type: 'doughnut',
+                    data: {
+                        labels: ['✅ Submitted', '⏳ Pending', '❌ Missed'],
+                        datasets: [{
+                            data: [1, 1, 2],
+                            backgroundColor: ['#2ecc71', '#f1c40f', '#e74c3c'],
+                            borderWidth: 0
+                        }]
+                    },
+                    options: {
+                        responsive: true,
+                        maintainAspectRatio: false,
+                        plugins: { legend: { position: 'bottom' } }
+                    }
+                });
+            }
 
             // Ball Drop Bar Chart
-            const ctx2 = document.getElementById('ballDropChart').getContext('2d');
-            const dates = dashboardData.ballDrops.map(d => d.date);
-            const counts = dashboardData.ballDrops.map(d => d.count);
-            
-            ballDropChart = new Chart(ctx2, {
-                type: 'bar',
-                data: {
-                    labels: dates,
-                    datasets: [{
-                        label: 'Ball Drops',
-                        data: counts,
-                        backgroundColor: ['#e74c3c', '#f39c12', '#f1c40f', '#e74c3c', '#f39c12', '#f1c40f', '#e74c3c'],
-                        borderRadius: 5
-                    }]
-                },
-                options: {
-                    responsive: true,
-                    maintainAspectRatio: false,
-                    plugins: { legend: { display: false } },
-                    scales: {
-                        y: { beginAtZero: true, ticks: { stepSize: 1 } }
+            const ctx2 = document.getElementById('ballDropChart');
+            if (ctx2) {
+                charts.ballDrop = new Chart(ctx2, {
+                    type: 'bar',
+                    data: {
+                        labels: ['2026-07-08', '2026-07-07', '2026-07-06', '2026-07-05', '2026-07-04', '2026-07-03', '2026-07-02'],
+                        datasets: [{
+                            label: 'Ball Drops',
+                            data: [3, 2, 1, 4, 2, 3, 1],
+                            backgroundColor: ['#e74c3c', '#f39c12', '#f1c40f', '#e74c3c', '#f39c12', '#f1c40f', '#e74c3c'],
+                            borderRadius: 5
+                        }]
+                    },
+                    options: {
+                        responsive: true,
+                        maintainAspectRatio: false,
+                        plugins: { legend: { display: false } },
+                        scales: {
+                            y: { beginAtZero: true, ticks: { stepSize: 1 } }
+                        }
                     }
-                }
-            });
+                });
+            }
 
-            // Scorecard Chart (Bar)
-            const ctx3 = document.getElementById('scorecardChart').getContext('2d');
-            scorecardChart = new Chart(ctx3, {
-                type: 'bar',
-                data: {
-                    labels: dashboardData.leadership.departments.map(d => d.name),
-                    datasets: [{
-                        label: 'Compliance %',
-                        data: dashboardData.leadership.departments.map(d => d.compliance),
-                        backgroundColor: dashboardData.leadership.departments.map(d => 
-                            d.compliance >= 80 ? '#2ecc71' : d.compliance >= 60 ? '#f1c40f' : '#e74c3c'
-                        ),
-                        borderRadius: 5
-                    }]
-                },
-                options: {
-                    responsive: true,
-                    maintainAspectRatio: false,
-                    plugins: { legend: { display: false } },
-                    scales: { y: { beginAtZero: true, max: 100, ticks: { callback: v => v + '%' } } }
-                }
-            });
+            // Top 5 Risks (Bar Chart)
+            const ctx3 = document.getElementById('topRisksChart');
+            if (ctx3) {
+                charts.topRisks = new Chart(ctx3, {
+                    type: 'bar',
+                    data: {
+                        labels: ['Risk 1', 'Risk 2', 'Risk 3', 'Risk 4', 'Risk 5'],
+                        datasets: [{
+                            label: 'Risk Score',
+                            data: [25, 15, 45, 15, 29],
+                            backgroundColor: ['#e74c3c', '#f39c12', '#c0392b', '#f39c12', '#e67e22'],
+                            borderRadius: 5
+                        }]
+                    },
+                    options: {
+                        responsive: true,
+                        maintainAspectRatio: false,
+                        plugins: { legend: { display: false } },
+                        scales: {
+                            y: { beginAtZero: true }
+                        }
+                    }
+                });
+            }
+
+            // Compliance Risk Trend (Line Chart)
+            const ctx4 = document.getElementById('complianceRiskChart');
+            if (ctx4) {
+                charts.complianceRisk = new Chart(ctx4, {
+                    type: 'line',
+                    data: {
+                        labels: ['Q1 2021', 'Q2 2021', 'Q3 2021', 'Q4 2021', 'Q1 2022'],
+                        datasets: [{
+                            label: 'Risk Score',
+                            data: [37, 33, 15, 45, 25],
+                            borderColor: '#3498db',
+                            backgroundColor: 'rgba(52, 152, 219, 0.1)',
+                            fill: true,
+                            tension: 0.4,
+                            pointBackgroundColor: '#3498db',
+                            pointRadius: 5
+                        }]
+                    },
+                    options: {
+                        responsive: true,
+                        maintainAspectRatio: false,
+                        plugins: { legend: { display: false } },
+                        scales: {
+                            y: { beginAtZero: true }
+                        }
+                    }
+                });
+            }
+
+            // Audit Check Ratio (Doughnut)
+            const ctx5 = document.getElementById('auditChart');
+            if (ctx5) {
+                charts.audit = new Chart(ctx5, {
+                    type: 'doughnut',
+                    data: {
+                        labels: ['Failed (34%)', 'Manual Check (21%)', 'Planned (16%)', 'TBD (29%)'],
+                        datasets: [{
+                            data: [34, 21, 16, 29],
+                            backgroundColor: ['#e74c3c', '#f39c12', '#3498db', '#95a5a6'],
+                            borderWidth: 0
+                        }]
+                    },
+                    options: {
+                        responsive: true,
+                        maintainAspectRatio: false,
+                        plugins: { legend: { position: 'bottom', labels: { font: { size: 10 } } } }
+                    }
+                });
+            }
+
+            // Action Plan Chart (Bar)
+            const ctx6 = document.getElementById('actionPlanChart');
+            if (ctx6) {
+                charts.actionPlan = new Chart(ctx6, {
+                    type: 'bar',
+                    data: {
+                        labels: ['Failed', 'Manual Check', 'Planned', 'Planned', 'TBD'],
+                        datasets: [{
+                            label: 'Actions',
+                            data: [17, 25, 37, 20, 20],
+                            backgroundColor: ['#e74c3c', '#f39c12', '#2ecc71', '#3498db', '#95a5a6'],
+                            borderRadius: 5
+                        }]
+                    },
+                    options: {
+                        responsive: true,
+                        maintainAspectRatio: false,
+                        plugins: { legend: { display: false } },
+                        scales: {
+                            y: { beginAtZero: true }
+                        }
+                    }
+                });
+            }
+
+            // Scorecard Chart
+            const ctx7 = document.getElementById('scorecardChart');
+            if (ctx7) {
+                charts.scorecard = new Chart(ctx7, {
+                    type: 'bar',
+                    data: {
+                        labels: ['Dispatch', 'SSC', 'HR', 'RTM'],
+                        datasets: [{
+                            label: 'Compliance %',
+                            data: [75, 85, 60, 55],
+                            backgroundColor: ['#f39c12', '#2ecc71', '#e74c3c', '#c0392b'],
+                            borderRadius: 5
+                        }]
+                    },
+                    options: {
+                        responsive: true,
+                        maintainAspectRatio: false,
+                        plugins: { legend: { display: false } },
+                        scales: {
+                            y: { beginAtZero: true, max: 100, ticks: { callback: v => v + '%' } }
+                        }
+                    }
+                });
+            }
         }
 
         // ============================================================
-        // 8. REFRESH
-        // ============================================================
-        function refreshDashboard() {
-            document.getElementById('last-update').textContent = 'Refreshing...';
-            setTimeout(() => {
-                document.getElementById('last-update').textContent = new Date().toLocaleString();
-                renderCompliance();
-                renderOffenders();
-                renderHeatmap();
-                if (statusChart) statusChart.destroy();
-                if (ballDropChart) ballDropChart.destroy();
-                if (scorecardChart) scorecardChart.destroy();
-                initCharts();
-            }, 500);
-        }
-
-        // ============================================================
-        // 9. INIT
+        // 4. INIT - Wait for DOM and Chart.js to load
         // ============================================================
         document.addEventListener('DOMContentLoaded', function() {
-            renderCompliance();
-            renderOffenders();
-            renderHeatmap();
-            initCharts();
+            // Small delay to ensure Chart.js is fully loaded
+            setTimeout(initCharts, 100);
             document.getElementById('last-update').textContent = new Date().toLocaleString();
-            
-            // Update summary stats
-            document.getElementById('total-projects').textContent = dashboardData.compliance.length;
-            document.getElementById('pending-reports').textContent = dashboardData.compliance.filter(c => c.status === 'Pending').length;
-            document.getElementById('missed-reports').textContent = dashboardData.compliance.filter(c => c.status === 'Missed').length;
-            const submitted = dashboardData.compliance.filter(c => c.status === 'Submitted').length;
-            const total = dashboardData.compliance.length;
-            document.getElementById('compliance-rate').textContent = Math.round((submitted/total)*100) + '%';
-            document.getElementById('total-offenders').textContent = dashboardData.fraud.personal.offenders + dashboardData.fraud.undispatch.faulty + dashboardData.fraud.refund.offenders;
+        });
+
+        // Also re-initialize if page is fully loaded
+        window.addEventListener('load', function() {
+            setTimeout(initCharts, 200);
         });
 
         // Make functions global
-        window.refreshDashboard = refreshDashboard;
         window.switchFraudTab = switchFraudTab;
     </script>
 
